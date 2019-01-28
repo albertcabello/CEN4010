@@ -8,13 +8,13 @@ app.use(cors());
 //This is how to make get requests in express
 //This example will trigger when you visit the / endpoint of the webapp
 app.get('/', (req, res) => {
-	res.status(200).send({example: "Hooray! You just made a GET request to this endpoint"});
+	res.status(200).send('Hello World!'); //You can send strings back from the API call
 });
 
 //Javascript has two notations for functions: arrow notation (above) and anonymous function notation (below)
 //This example will trigger when you visit the /test endpoint
 app.get('/test', function(req, res) {
-	res.status(200).send({example: "Testing"});
+	res.status(200).send({example: "Testing"}); //You can also send objects back from the API call as JSON
 });
 
 
