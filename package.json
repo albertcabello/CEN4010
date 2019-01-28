@@ -1,0 +1,23 @@
+{
+  "name": "cen4010",
+  "version": "1.0.0",
+  "description": "A bookstore web app for CEN4010",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/albertcabello/CEN4010.git"
+  },
+  "author": "Alberto Cabello, Giuliana Avogadro, David Bennett, Mohammed Bhatti, Esteban Chirinos, Carlos Debasa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/albertcabello/CEN4010/issues"
+  },
+  "homepage": "https://github.com/albertcabello/CEN4010#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.16.4"
+  }
+}
