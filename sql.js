@@ -33,4 +33,6 @@ connection.connect(function(err) {
 
 });
 
+connection.changeUser({database: config.db.database});
+
 module.exports = {connection};
