@@ -1,42 +1,62 @@
 let express = require('express');
+let bcrypt = require('bcrypt');
+let bodyParser = require('body-parser');
 let cors = require('cors');
+let connection = require('./sql.js').connection;
 
 let app = express();
 
+/************************************
+ *           Middlewares            *
+ ************************************/
 app.use(cors());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
-//This is how to make get requests in express
-//This example will trigger when you visit the / endpoint of the webapp
-app.get('/', (req, res) => {
-	res.status(200).send('Hello World!'); //You can send strings back from the API call
+/************************************
+ *       Profile Management         *
+ ************************************/
+app.get('/ping', (req, res) => {
+	res.status(200).send('pong');
 });
 
-//Javascript has two notations for functions: arrow notation (above) and anonymous function notation (below)
-//This example will trigger when you visit the /test endpoint
-app.get('/test', function(req, res) {
-	res.status(200).send({example: "Testing"}); //You can also send objects back from the API call as JSON
+app.post('/login', (req, res) => {
+	let query = `SELECT * FROM users WHERE username = ?`
+	connection.query(query, [req.body.username] , (err, results, fields) => {
+		if (err) {
+			console.log("Error with login", err);
+			res.status(400).send({error: "Error with login"});
+		}
+		if (results.length == 0) {
+			res.status(400).send({error: "Username and password do not match"});
+		}
+		else {
+			bcrypt.compare(req.body.password, results[0].password, (err, result) => {
+				if (result) {
+					res.status(200).send({successful: "Login succeeded"});
+				}
+				else {
+					res.status(400).send({error: "Username and password do not match"});
+				}
+			});
+		}
+	})
 });
 
-
-//You can also receive parameters from the GET requests by telling express with a : character
-app.get('/echo/:stringToEcho', (req, res) => {
-	res.status(200).send({echo: req.params.stringToEcho}); //You can access the parameters in the req.params.parameterName THEY MUST MATCH THE ENDPOINT NAME
+app.post('/register', (req, res) => {
+	bcrypt.hash(req.body.password, 10, (err, hash) => {
+		let vals = [req.body.username, hash, req.body.email, req.body.firstName, req.body.lastName, req.body.nickname];
+		let query = `INSERT INTO users (username, password, email, firstName, lastName, nickname) VALUES (?, ?, ?, ?, ?, ?)`;
+		connection.query(query, vals, (error, results, fields) => {
+			if (error) {
+				console.log("Error with registration", error);
+				res.status(400).send({error: "error occurred"});
+			}
+			else {
+				res.status(200).send({success: "user registered"});
+			}
+		});
+	});
 });
-
-//You can have multiple parameters
-app.get('/echo/:stringToEcho/:count', (req, res) => {
-	let ans = {};
-	for (let i = 0; i < req.params.count; i++) {
-		ans["echo" + (i + 1)] = req.params.stringToEcho;
-	}
-	res.status(200).send(ans);
-});
-
-//You use http status codes to send error messages that are quick to check, google the common status codes, you probably know 404 as does not exists
-app.get('/dne', (req, res) => {
-	res.status(404).send({error: "example for does not exist"});
-});
-
 
 app.listen(8000); //This is the port express will listen on
-	
