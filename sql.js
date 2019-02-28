@@ -19,8 +19,26 @@ let tables = {
 		  "`email` varchar(100) NOT NULL," +
 		  "`password` varchar(255) DEFAULT NULL," +
 		  "`nickname` varchar(50) DEFAULT NULL," + 
+		  "`defaultShipping` int(11)," + 
 		  "PRIMARY KEY (`id`)," +
 		  "UNIQUE KEY `username` (`username`))",
+
+	addresses: "CREATE TABLE IF NOT EXISTS `addresses` (" + 
+		     "`id` int(11) NOT NULL AUTO_INCREMENT," +
+		     "`fullName` varchar(200) DEFAULT NULL," + 
+		     "`firstLine` varchar(200) NOT NULL," + 
+		     "`secondLine` varchar(200)," + 
+		     "`city` varchar(200) NOT NULL," + 
+		     "`state` varchar(2) NOT NULL," + 
+		     "`zip` varchar(5) NOT NULL," +
+		     "`instr` varchar(1000)," +
+		     "`code` varchar(20)," +
+		     "PRIMARY KEY (`id`))",
+
+	userAddresses: "CREATE TABLE IF NOT EXISTS `userAddresses` (" +
+			 "`userId` int(11) NOT NULL, addressId int(11) NOT NULL," +
+			 "FOREIGN KEY (userId) REFERENCES `users`(`id`)," + 
+			 "FOREIGN KEY (addressId) REFERENCES `addresses`(`id`))",
 }
 
 //Initializes your mysql connection
@@ -38,6 +56,11 @@ connection.query("CREATE DATABASE IF NOT EXISTS " + config.db.database, function
 		for (let table in tables) {//Performs the table creations
 			connection.query(tables[table], function(err) {
 				if(err) throw err;
+				if (table === 'addresses') {
+					connection.query("ALTER TABLE users ADD CONSTRAINT FOREIGN KEY (defaultShipping) REFERENCES addresses(id)", (err) => {
+						if (err) throw err;
+					});
+				}
 			});
 		}
 	});

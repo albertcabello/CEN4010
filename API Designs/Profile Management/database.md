@@ -2,8 +2,8 @@
 
 Table Name: users
 
-| id | username | password | email | nickname | shipping |
-| --- | --- | --- | --- | --- | --- | 
+| id | username | password | email | nickname | shipping | defaultShipping |
+| --- | --- | --- | --- | --- | --- | --- |
 
 Table Name: credits
 
@@ -12,11 +12,10 @@ Table Name: credits
 
 Table Name: addresses
 
-| id | shipping address|
-| --- | --- |
+| id | fullName | firstLine | secondLine | city | state | zip | instr | code |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
-Table Name: homes
+Table Name: userAddresses
 
-| id | home |
-| --- | --- |
-
+| userId | addressId | 
+| ------ | --------- |
