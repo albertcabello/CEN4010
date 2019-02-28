@@ -6,14 +6,17 @@ Table Name: users
 | --- | --- | --- | --- | --- | --- | 
 
 Table Name: credits
+
 | id | credit card | 
 | --- | --- |
 
 Table Name: addresses
+
 | id | shipping address|
 | --- | --- |
 
 Table Name: homes
+
 | id | home |
 | --- | --- |
 
