@@ -11,6 +11,8 @@ let connection = mysql.createConnection({
 //Add the commands that you use to create your tables here in another key, always use CREATE TABLE IF NOT EXISTS
 //This file shouldn't have to change except for this object as well as any for loops you need to create dummy data
 let tables = {
+	stopForeignKey : "SET FOREIGN_KEY_CHECKS = 0", 
+
 	users : "CREATE TABLE IF NOT EXISTS `users` (" + 
 		  "`id` int(11) NOT NULL AUTO_INCREMENT," +
 		  "`username` varchar(255) DEFAULT NULL," + 
@@ -21,6 +23,7 @@ let tables = {
 		  "`nickname` varchar(50) DEFAULT NULL," + 
 		  "`defaultShipping` int(11)," + 
 		  "PRIMARY KEY (`id`)," +
+		  "CONSTRAINT `defaultShipping` FOREIGN KEY (`defaultShipping`) REFERENCES `addresses`(`id`) ON DELETE SET NULL," + 
 		  "UNIQUE KEY `username` (`username`))",
 
 	addresses: "CREATE TABLE IF NOT EXISTS `addresses` (" + 
@@ -39,6 +42,8 @@ let tables = {
 			 "`userId` int(11) NOT NULL, addressId int(11) NOT NULL," +
 			 "FOREIGN KEY (userId) REFERENCES `users`(`id`)," + 
 			 "FOREIGN KEY (addressId) REFERENCES `addresses`(`id`))",
+
+	continueForeignKey : "SET FOREIGN_KEY_CHECKS = 1",
 }
 
 //Initializes your mysql connection
@@ -56,11 +61,6 @@ connection.query("CREATE DATABASE IF NOT EXISTS " + config.db.database, function
 		for (let table in tables) {//Performs the table creations
 			connection.query(tables[table], function(err) {
 				if(err) throw err;
-				if (table === 'addresses') {
-					connection.query("ALTER TABLE users ADD CONSTRAINT FOREIGN KEY (defaultShipping) REFERENCES addresses(id)", (err) => {
-						if (err) throw err;
-					});
-				}
 			});
 		}
 	});

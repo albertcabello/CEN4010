@@ -47,6 +47,7 @@ function isAuthenticated(req, res, next) {
 /************************************
  *       Profile Management         *
  ************************************/
+//Given a username and password, runs the callback with err or user
 function authenticate(username, password, callback) {
 	let query = `SELECT * FROM users WHERE username = ?`;
 	connection.query(query, [username], (err, results, fields) => {
@@ -78,6 +79,7 @@ app.get('/login', (req, res) => {
 	res.send("This will eventually be a login page");
 });
 
+//Starts a session 
 app.post('/login', (req, res) => {
 	authenticate(req.body.username, req.body.password, (err, user) => {
 		if (err) {
@@ -94,6 +96,7 @@ app.post('/login', (req, res) => {
 	});
 });
 
+//Clears your session
 app.get('/logout', (req, res) => {
 	if (!req.session.user) {
 		res.status(400).send({error: 'Not logged in to begin with'});
@@ -105,6 +108,7 @@ app.get('/logout', (req, res) => {
 	}
 });
 
+//Registers a user and starts a session with the new user
 app.post('/register', (req, res) => {
 	bcrypt.hash(req.body.password, 10, (err, hash) => {
 		let vals = [req.body.username, hash, req.body.email, req.body.firstName, req.body.lastName, req.body.nickname];
@@ -127,7 +131,9 @@ app.post('/register', (req, res) => {
 	});
 });
 
+//Updates the users information, only updates what's provided
 app.post('/update/', isAuthenticated, (req, res) => {
+	//<query building stage>
 	let query = `UPDATE users SET`
 	let vals = [];
 	let changes = Object.keys(req.body);
@@ -141,14 +147,113 @@ app.post('/update/', isAuthenticated, (req, res) => {
 		vals.push(req.body[changes[i]]);
 	}
 	query = query + ` WHERE id = ${req.session.user.id}`;
+	//</query building stage>
 	connection.query(query, vals, (err, results) => {
+		if (err) res.status(400).send({error: "Error updating the user object, please try again"});
 		query = `SELECT * FROM users WHERE id = ${req.session.user.id}`;
 		connection.query(query, (err, results) => {
+			if (err) res.status(400).send({error: "Error getting user object back"});
 			req.session.user = results[0];
 			delete req.session.user.password;
 			res.status(200).send({success: "User updated", user: results[0]});
 		});
 	});
 });
+
+app.post('/address/add', isAuthenticated, (req, res) => {
+	//<query building stage>
+	let makeDefault = req.body.makeDefault === 'true';
+	let query = `INSERT INTO addresses (`
+	let vals = [];
+	let changes = Object.keys(req.body);
+	let allowedFields = ['fullName', 'firstLine', 'secondLine', 'city', 'state', 'zip', 'instr', 'code', 'makeDefault'];
+	for (let i = 0; i < changes.length; i++) {
+		if (!allowedFields.includes(changes[i])) {
+			res.status(400).send({error: "Malformed request, unknown field provided: " + changes[i]});
+			return;
+		}
+		if (changes[i] === 'makeDefault') {
+			continue;
+		}
+		if (i === 0) {
+			query = query + `${changes[i]}`;
+		}
+		else {
+			query = query + `, ${changes[i]}`;
+		}
+		vals.push(req.body[changes[i]]);
+	}
+	query = query + `) VALUES (`;
+	for (let i = 0; i < vals.length; i++) {
+		if (i === 0) {
+			query = query + `?`;
+		}
+		else {
+			query = query + `, ?`;
+		}
+	}
+	query = query + `)`;
+	//</query building stage>
+	//<transaction to add address to address table and junction table>
+	connection.beginTransaction((err) => {
+		if (err) res.status(400).send({error: err.toString()}); 
+		connection.query(query, vals, (errAddr) => { //This query is to insert the address
+			if (errAddr) {
+				return connection.rollback(() => {
+					res.status(400).send({error: errAddr.toString()});
+				});
+			}
+			connection.query(`SELECT LAST_INSERT_ID()`, (errId, fields) => { //This query is to save the addressId
+				if (errId) {
+					return connection.rollback(() => {
+						res.status(400).send({errorId: errId.toString()});
+					});
+				}
+				let addressId = fields[0]['LAST_INSERT_ID()'];
+				query = `INSERT INTO userAddresses (userId, addressId) VALUES (?, ${addressId})`;
+				connection.query(query, req.session.user.id, (errJunc) => { //This query is to insert into the userAddresses junction table
+					if (errJunc) {
+						return connection.rollback(() => {
+							res.status(400).send({errorJunc: errJunc.toString()});
+						});
+					}
+					if (makeDefault) {
+						//This query makes the defaultAddress be the id we saved
+						connection.query(`UPDATE users SET defaultShipping = ${addressId} WHERE id = ?`, req.session.user.id, (errDefault) => { 
+							if (errDefault) {
+								res.status(400).send({errorDefault: "Was able to add address but couldn't make it default " + err.toString()});
+								return;
+							}
+							else {
+								console.log("make def");
+							}
+							//This commits all the changes we did
+							connection.commit((errCommit) => {
+								if (errCommit) {
+									return connection.rollback(() => {
+										res.status(400).send({errorCommit: errCommit.toString()});
+									});
+								}
+								res.status(200).send({success: "Everything done"});
+							});
+						});
+					}
+					else {
+						connection.commit((errCommit) => {
+							if (errCommit) {
+								return connection.rollback(() => {
+									res.status(400).send({errorCommit: errCommit.toString()});
+								});
+							}
+						});
+						res.status(200).send({success: "Everything done"});
+					}
+				});
+			});
+		});
+	});
+	//</transaction to add address to address table and junction table>
+});
+
 
 app.listen(8000); //This is the port express will listen on
