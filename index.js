@@ -132,11 +132,11 @@ app.post('/register', (req, res) => {
 });
 
 //Updates the users information, only updates what's provided
-app.post('/update/', isAuthenticated, (req, res) => {
+app.put('/update/', isAuthenticated, async (req, res) => {
 	//<query building stage>
 	let query = `UPDATE users SET`
 	let vals = [];
-	let changes = Object.keys(req.body);
+	let changes = Object.keys(req.body); 
 	for (let i = 0; i < changes.length; i++) {
 		if (i === 0) {
 			query = query + ` ${changes[i]} = ?`;
@@ -144,9 +144,22 @@ app.post('/update/', isAuthenticated, (req, res) => {
 		else {
 			query = query + `, ${changes[i]} = ?`; //Notice that this is different with a comma
 		}
-		vals.push(req.body[changes[i]]);
+		if (changes[i] === 'password') {
+			//This wraps the hashing function into a promise so that we can await it before continuing the loop
+			let hashedPassword = await new Promise((resolve, reject) => {
+				bcrypt.hash(req.body[changes[i]], 10, (err, hash) => {
+					if (err) reject(err);
+					resolve(hash);
+				});
+			});
+			vals.push(hashedPassword);
+		}
+		else {
+			vals.push(req.body[changes[i]]);
+		}
 	}
 	query = query + ` WHERE id = ${req.session.user.id}`;
+	console.log(query, vals);
 	//</query building stage>
 	connection.query(query, vals, (err, results) => {
 		if (err) res.status(400).send({error: "Error updating the user object, please try again"});
@@ -160,7 +173,10 @@ app.post('/update/', isAuthenticated, (req, res) => {
 	});
 });
 
-app.post('/address/add', isAuthenticated, (req, res) => {
+/************************************
+ *       User Address Management    *
+ ************************************/
+app.post('/address', isAuthenticated, (req, res) => {
 	//<query building stage>
 	let makeDefault = req.body.makeDefault === 'true';
 	let query = `INSERT INTO addresses (`
@@ -255,5 +271,70 @@ app.post('/address/add', isAuthenticated, (req, res) => {
 	//</transaction to add address to address table and junction table>
 });
 
+//Lists addresses
+app.get('/address', isAuthenticated, (req, res) => {
+	let query = `SELECT * FROM addresses JOIN userAddresses ON userAddresses.addressId = addresses.id WHERE userId = ${req.session.user.id}`;
+	connection.query(query, (err, results) => {
+		if (err) res.status(400).send({error: "Error with retrieving addresses"});
+		else res.status(200).send(results);
+	});
+});
+
+app.delete('/address', isAuthenticated, (req, res) => {
+	let query = `DELETE FROM userAddresses WHERE userId = ? and addressId = ?`;
+	connection.query(query, [req.session.user.id, req.query.id], (err, results) => {
+		if (err) res.status(400).send({error: "Error removing the address"});
+		else res.status(200).send({success: "Address removed"});
+	});
+});
+
+/************************************
+ *    User Credit Card Management   *
+ ************************************/
+function checkCard(cardNumber) {
+	if (!cardNumber) {
+		return false;
+	}
+	let sum = 0;
+	let alternate = false; 
+	for (let i = cardNumber.length - 1; i >= 0; i--) {
+		let n = parseInt(cardNumber[i], 10);
+		if (alternate) {
+			n *= 2;
+			if (n > 9) {
+				n = (n % 10) + 1;
+			}
+		}
+		sum += n;
+		alternate = !alternate;
+	}
+	return (sum % 10 === 0);
+}
+
+app.post('/card', isAuthenticated, (req, res) => {
+	if (!checkCard(req.body.cardNumber)) {
+		res.status(400).send({error: "Credit card number is not valid"});
+		return;
+	}
+	let query = `INSERT INTO cards (userId, cardNumber) VALUES (${req.session.user.id}, ?)`;
+	connection.query(query, req.body.cardNumber, (err, results) => {
+		if (err) res.status(400).send({error: "Couldn't save the credit card"});
+		else res.status(200).send({success: "Added credit card"});
+	});
+});
+
+app.get('/card', isAuthenticated, (req, res) => {
+	connection.query(`SELECT * FROM cards WHERE userId = ${req.session.user.id}`, (err, results) => {
+		if (err) res.status(400).send({error: "Error fetching cards"});
+		else res.status(200).send(results);
+	});
+});
+
+app.delete('/card', isAuthenticated, (req, res) => {
+	connection.query(`DELETE FROM cards WHERE userId = ${req.session.user.id} and id = ?`, req.query.id, (err, results) => {
+		if (err) res.status(400).send({error: "Error deleting card"});
+		else res.status(200).send({success: "Card removed"});
+	});
+});
 
 app.listen(8000); //This is the port express will listen on

@@ -42,6 +42,10 @@ let tables = {
 			 "`userId` int(11) NOT NULL, addressId int(11) NOT NULL," +
 			 "FOREIGN KEY (userId) REFERENCES `users`(`id`)," + 
 			 "FOREIGN KEY (addressId) REFERENCES `addresses`(`id`))",
+	
+	cards: "CREATE TABLE IF NOT EXISTS `cards` (" + 
+		 "`id` int(11) NOT NULL AUTO_INCREMENT, `userId` int(11) NOT NULL, cardNumber varchar(19) NOT NULL," +
+		 "PRIMARY KEY (id), FOREIGN KEY (`userId`) REFERENCES `users`(`id`))",
 
 	continueForeignKey : "SET FOREIGN_KEY_CHECKS = 1",
 }
