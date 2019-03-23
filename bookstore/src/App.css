@@ -1,0 +1,360 @@
+body {
+  font-family: PT Serif Caption;
+
+ }
+
+/* Header */
+.header{
+  width: 100%;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  margin: auto;
+  max-width: 1120px !important;
+  border-bottom-style: solid;
+  border-bottom-color: #DCDCDC;
+  border-bottom-width: 1px;
+}
+
+.logo{
+  position: relative;
+  max-width: 159px;
+}
+
+.main-header.right{
+  position: relative;
+  display: inline-block;
+  float: right;
+}
+
+.menu-item{
+  position: relative;
+  color: black;
+  display: inline-block;
+  padding-right: 35px;
+  font-style: italic
+}
+
+.dropdown{
+  width: 140px;
+  border: 1px solid #DCDCDC;
+  position: absolute;
+  background-color: white;
+  padding-left: 0;
+  list-style-type: none;
+  visibility: hidden;
+  opacity: 0;
+  transition-property: opacity, visibility;
+  transition-duration: .4s, 0s;
+  transition-delay: 0s, .4s;
+}
+
+.dropdown-item{
+  padding-right: 10px;
+  color: black;
+  font-style: italic;
+  border-bottom: 1px solid #DCDCDC;
+}
+
+.menu-item:hover .dropdown{
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s, 0s;
+}
+
+a{
+  font-style: italic;
+  color: black;
+  text-decoration: none;
+}
+
+a:hover{
+  color: #c3ad70;
+}
+
+.search-container {
+
+}
+
+.search{
+	text-align: center;
+	width: 10px;
+	float: right;
+}
+
+ /* Book description */
+.description {
+  padding-left: 110px;
+  padding-right: 99.5px;
+  padding-top: 70px;
+}
+
+
+ /* Book specifications */
+.description .spec {
+    z-index: 7;
+    min-width: 700px;
+    max-width: 700px;
+    line-height: 40px;
+    border-width: 0px;
+    float: right;
+}
+
+.description .spec .book-name{
+  font-family: Playfair Display;
+}
+
+.price-wrapper{
+  border-top: 1px solid #DCDCDC;
+  border-bottom: 1px solid #DCDCDC;
+  color: black;
+}
+
+.rating{
+  float: right;
+}
+
+ .checked{
+  color: #FFCC66;
+}
+
+.expand{
+  padding-left: 5px;
+  font-size: 12px;
+}
+
+.add-to-cart-button{
+  color: white;
+  font-style: oblique;
+  font-family: Playfair Display;
+  background-color: #000000;
+  border: 1px solid #000000;
+  padding: 9px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.wishlist {
+  background-color: transparent;
+  border: 1px white;
+  text-decoration: none;
+  padding: 1rem;
+  position: relative;
+  vertical-align: middle;
+  text-align: center;
+  display: inline-block;
+  color: black;
+  font-style: oblique;
+  font-family: Playfair Display;
+  transition: all ease 0.4s;
+}
+
+.wishlist span {
+  margin-left: 0.5rem;
+}
+
+.wishlist .heart,
+.wishlist span {
+  transition: all ease 0.4s;
+}
+
+.wishlist:focus {
+  background-color: transparent;
+}
+
+.wishlist:focus .heart,
+.wishlist:focus span {
+  color: black;
+}
+
+.wishlist:hover {
+  border-color: #cc4b37;
+  background-color: transparent;
+}
+
+.wishlist:hover .heart,
+.wishlist:hover span {
+  color: #cc4b37;
+}
+
+.underline{
+  margin-top: 3px;
+  background-color: #c3ad70;
+  width: 40px;
+  height:1px;
+  border:1px solid #c3ad70;
+}
+
+.add-to-cart-button:hover{
+  background-color: #c3ad70;
+  border-color: #c3ad70;
+}
+
+.description .cover{
+  float: left;
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.author{
+  float: right;
+  padding-top: 50px;
+  padding-left: 200px;
+  padding-right: 200px;
+}
+
+.reviews{
+  float:left;
+  padding-top: 30px;
+  padding-left: 99.5px;
+  padding-right: 99.5px;
+}
+
+.tabs{
+  float: left;
+  padding-top: 70px;
+  padding-left: 99.5px;
+  padding-right: 99.5px;
+  padding-bottom: 99.5px;
+  width: 1070px
+}
+
+section {
+  display: none;
+  padding: 10px 0px 20px;
+  border-top: 1px solid #DCDCDC;
+  border-bottom: 1px solid #DCDCDC;
+}
+
+.section-title{
+  font-family: Playfair Display;
+  padding-bottom: 5px;
+}
+
+input {
+  display: none;
+}
+
+label {
+  display: inline-block;
+  margin: 0 0 -1px;
+  padding: 15px 25px;
+  text-align: center;
+  color: black;
+  background-color: #DCDCDC;
+  border: 1px solid transparent;
+}
+
+label:hover {
+  color: #c3ad70;
+  cursor: pointer;
+}
+
+input:checked + label {
+  color: #c3ad70;
+  border: 1px solid #DCDCDC;
+  border-top: 1px solid #DCDCDC;
+  border-bottom: 1px solid #fff;
+  background-color: #fff;
+}
+
+#tab1:checked ~ #content1,
+#tab2:checked ~ #content2,
+#tab3:checked ~ #content3 {
+  display: block;
+}
+
+#more-comments {
+  color: black;
+  border: 1px solid #fff;
+  padding-bottom: 10px;
+  background-color: #fff;
+  font-family: PT Serif Caption;
+  cursor: pointer;
+}
+
+#more-comments:hover{
+  color: #c3ad70;
+}
+
+#more-comments:active {
+  display: block;
+}
+
+#more{
+  display: none;
+}
+
+.author-page-header{
+  font-family: Playfair Display;
+  padding-left: 399.5px;
+  padding-right: 99.5px;
+  padding-top: 70px;
+
+}
+
+.author-sidebar-wrapper .content{
+  float: left;
+  padding-left: 120px;
+  max-width: 250px;
+  font-size: 15px;
+  text-align: left;
+  line-height: 1.8;
+  word-spacing: 5px;
+}
+
+.author-sidebar-wrapper .author-name{
+  font-style: italic;
+  color: black;
+  font-weight: 700;
+  font-family: Playfair Display;
+}
+
+.author-sidebar-wrapper .border{
+  padding-left: 350px;
+  background-color: transparent;
+  width: 40px;
+  height:500px;
+  border-right:1px solid #DCDCDC;
+}
+
+.browse-wrapper{
+  float: right;
+}
+
+.browse-wrapper .sort-btn{
+  float: right;
+  margin-right: 150px;	
+  display: inline;
+  padding: 3px 40px;
+}
+
+.book-wrapper{
+  max-width: 170.7px;
+  padding-right: 690px;
+  margin-top: 70px;
+}
+
+.book-wrapper .add-to-cart-button{
+  padding: 7px 10px;
+  font-size: 12px;
+  margin-left: 20px;
+}
+
+.book-wrapper .cover-small{
+  width: 160.7px;
+  height: 206.7px;
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.book-wrapper .title, .price{
+  font-size: 15px;
+  text-align: center;
+  color: black;
+}
+
+.book-wrapper .buttons{
+  margin-top: 5px;
+}
+
+
+
