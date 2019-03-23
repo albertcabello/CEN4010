@@ -19,9 +19,12 @@
   Body:
   ```
   {
-  	"username": "alberto", //Can be the same as before 
-	"password": "alberto1234" //Can't be the same as before
-	"nickname": "albert"
+  	"username": "alberto", //Optional
+	"password": "alberto1234", //Optional
+	"nickname": "albert", //Optional
+	"email": "acabe019@fiu.edu", //Optional
+	"firstName": "Alberto", //Optional
+	"lastName": "Cabello" //Optional
   }
   ```
   Responses:
