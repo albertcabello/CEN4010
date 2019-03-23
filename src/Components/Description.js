@@ -27,10 +27,10 @@ class Description extends React.Component {
 	<img class= "cover" onClick={() => this.handleImgClick()} src= {this.props.cover}/>
 	<div id="myModal" class="modal" style={{display : this.state.display}}>
   		<span class="close" onClick={() => this.closeEnlargedImg()}>&times;</span>
-  		<img class="modal-content" id="img01" src="https://images.penguinrandomhouse.com/cover/9780143128571"/>
+  		<img class="modal-content" id="img01" src={this.props.cover}/>
 	</div>
 	<div class= "spec">
-	<h2 class="book-name">{this.props.title} by <a href= "/author">{this.props.author}</a>
+	<h2 class="book-name">{this.props.title} by <a href= "/author">{this.props.first} {this.props.last}</a>
 	<div class= "underline"></div>
 	</h2>
 	<p  class="price-wrapper">${this.props.price}

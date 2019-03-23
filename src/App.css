@@ -138,7 +138,7 @@ a:hover{
   background-color: transparent;
   border: 1px white;
   text-decoration: none;
-  padding: 1rem;
+  padding: 0.3rem;
   position: relative;
   vertical-align: middle;
   text-align: center;
@@ -409,7 +409,7 @@ input:checked + label {
 }
 
 .book-wrapper .add-to-cart-button{
-  padding: 7px 10px;
+  padding: 7px 8px;
   font-size: 12px;
   margin-left: 20px;
   margin-right: 10px;

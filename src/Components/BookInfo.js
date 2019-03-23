@@ -7,29 +7,39 @@ const API = '/book/';
 
 class BookInfo extends React.Component {
   state = {
-    title: '',
-    response: '',
-    post: '',
+    isbn: this.props.match.params.isbn,
+    // response: {title: 'defa',
+    //             authorFirst: '',
+    //             authorLast: '',
+    //             cover: '',
+    //             genre: '',
+    //             publisher: '',
+    //             avgRating: '',
+    //             description: '',
+    //             biography: ''},
+    response: [],
     responseToPost: '',
   };
-  componentWillMount= async () => {
-    const response = await fetch(API + this.props.match.params.isbn, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ post: this.state.post }),
-    });
-    const body = await response.json().then(function(data) {
-      console.log("hiya")
-    });
-  };
+  
+  componentWillMount(){
+    var apiCall = fetch(API + this.state.isbn);
+
+    apiCall.then(response => {
+      return response.json();
+      }).then(result => {
+         this.setState({
+          response: result
+        })
+       });
+    };
+
   render() {
     return (
       <div>
 	<Titles />
-	<Description  title = {this.state.title} description = "hula" price = "9.00" cover = "https://images.penguinrandomhouse.com/cover/9780143128571" author = "William Shakespeare"/>
-	<Tabs />
+  {this.state.response.map(d => <Description  title = {(d.title)} description = {(d.description)}
+  price = {(d.price)} cover = {(d.cover)} first = {(d.authorFirst)} last = {(d.authorLast)}/>)}
+  <Tabs />
       </div>
     );
   }

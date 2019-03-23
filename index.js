@@ -1,42 +1,77 @@
-let express = require('express');
-let cors = require('cors');
+const express = require('express');
+const morgan = require('morgan');
+const mysql = require("./sql.js");
+const bodyParser = require('body-parser');
 
 let app = express();
 
-app.use(cors());
+app.use(morgan('short'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
-//This is how to make get requests in express
-//This example will trigger when you visit the / endpoint of the webapp
-app.get('/', (req, res) => {
-	res.status(200).send('Hello World!'); //You can send strings back from the API call
-});
+const port = process.env.PORT || 3001
 
-//Javascript has two notations for functions: arrow notation (above) and anonymous function notation (below)
-//This example will trigger when you visit the /test endpoint
-app.get('/test', function(req, res) {
-	res.status(200).send({example: "Testing"}); //You can also send objects back from the API call as JSON
-});
+const connection = mysql.connection
 
+app.get('/book/:isbn', (req, res) => {
+  console.log("Fetching book with isbn: " + req.params.isbn)
+    const ISBN = req.params.isbn
+    const queryString =  "SELECT * FROM Book JOIN Description ON ISBN = descriptionID JOIN Author ON authorID = ID WHERE ISBN = ?"
 
-//You can also receive parameters from the GET requests by telling express with a : character
-app.get('/echo/:stringToEcho', (req, res) => {
-	res.status(200).send({echo: req.params.stringToEcho}); //You can access the parameters in the req.params.parameterName THEY MUST MATCH THE ENDPOINT NAME
-});
+    connection.query(queryString, [ISBN], (err, rows, fields) => {
+      if (err) {
+        console.log("Failed to query for book: " + err)
+        res.sendStatus(500)
+        return
+        // throw err
+      }
+  
+      const books = rows.map((row) => {
+        return {title: row.title,
+                authorFirst: row.authorFirst,
+                authorLast: row.authorLast,
+                cover: row.cover,
+                genre: row.genre,
+                publisher: row.publisher,
+                avgRating: row.avgRating,
+                description: row.description,
+                biography: row.bio,
+                price: row.price
+                }
+      })
+      res.json(books);
+      console.log(books[0]);
+    })
 
-//You can have multiple parameters
-app.get('/echo/:stringToEcho/:count', (req, res) => {
-	let ans = {};
-	for (let i = 0; i < req.params.count; i++) {
-		ans["echo" + (i + 1)] = req.params.stringToEcho;
-	}
-	res.status(200).send(ans);
-});
+    // res.end()
+  })
 
-//You use http status codes to send error messages that are quick to check, google the common status codes, you probably know 404 as does not exists
-app.get('/dne', (req, res) => {
-	res.status(404).send({error: "example for does not exist"});
-});
+  app.post('/author/:authorFirst/:authorLast', (req, res) => {
+    console.log("Fetching author info: " + req.params.authorLast)
+    const firstName = req.params.authorFirst
+    const lastName = req.params.authorLast
+    const queryString = "SELECT * FROM Book WHERE authorID IN (SELECT authorID FROM Author WHERE authorLast = ? )"
+    connection.query(queryString, [lastName, firstName], (err, rows, fields) => {
+        if (err) {
+          console.log("Failed to query for book: " + err)
+          res.sendStatus(500)
+          return
+          // throw err
+        }
+    
+        const booksByAuthor = rows.map((row) => {
+          return {title: row.title,
+                  cover: row.cover,
+                  price: row.price
+                  }
+        })
+    
+        res.send(booksByAuthor)
+      })
+})
 
-
-app.listen(8000); //This is the port express will listen on
+// localhost:3001
+app.listen(port, () => {
+  console.log('Server is up and listening on' , port)
+})
 	

@@ -7,8 +7,8 @@
 6 silly lifecycle bookstore@0.1.0~predev: no script for predev, continuing
 7 info lifecycle bookstore@0.1.0~dev: bookstore@0.1.0
 8 verbose lifecycle bookstore@0.1.0~dev: unsafe-perm in lifecycle true
-9 verbose lifecycle bookstore@0.1.0~dev: PATH: /usr/share/npm/bin/node-gyp-bin:/home/alexey/bookstore/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin
-10 verbose lifecycle bookstore@0.1.0~dev: CWD: /home/alexey/bookstore
+9 verbose lifecycle bookstore@0.1.0~dev: PATH: /usr/share/npm/bin/node-gyp-bin:/home/alexey/Desktop/CEN4010/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin
+10 verbose lifecycle bookstore@0.1.0~dev: CWD: /home/alexey/Desktop/CEN4010
 11 silly lifecycle bookstore@0.1.0~dev: Args: [ '-c', 'run-p server start' ]
 12 silly lifecycle bookstore@0.1.0~dev: Returned: code: 1  signal: null
 13 info lifecycle bookstore@0.1.0~dev: Failed to exec dev script
@@ -23,7 +23,7 @@
 14 verbose stack     at maybeClose (internal/child_process.js:925:16)
 14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:209:5)
 15 verbose pkgid bookstore@0.1.0
-16 verbose cwd /home/alexey/bookstore
+16 verbose cwd /home/alexey/Desktop/CEN4010
 17 error Linux 4.15.0-45-generic
 18 error argv "/usr/bin/node" "/usr/bin/npm" "run" "dev"
 19 error node v8.10.0

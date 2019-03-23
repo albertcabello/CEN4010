@@ -10,11 +10,10 @@ class BookInfoSmall extends React.Component {
 			post: '',
 			responseToPost: '',
 			};
-			
+
   handleClick = async e => {
     e.preventDefault();
     const response = await fetch(API + this.state.isbn, {
-      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
