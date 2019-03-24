@@ -47,11 +47,11 @@ let tables = {
 		 "`id` int(11) NOT NULL AUTO_INCREMENT, `userId` int(11) NOT NULL, cardNumber varchar(19) NOT NULL," +
 		 "PRIMARY KEY (id), FOREIGN KEY (`userId`) REFERENCES `users`(`id`))",
 
-	Book: "CREATE TABLE IF NOT EXISTS `Book` (`ISBN` INT PRIMARY KEY , `authorID` INT, `title` VARCHAR(45), `genre` VARCHAR(45), `publisher` VARCHAR(45), `cover` VARCHAR(150), `price` DOUBLE, `avgRating` DOUBLE)",
+	Book: "CREATE TABLE IF NOT EXISTS `Book` (`ISBN` INT(11) PRIMARY KEY , `authorID` INT(11), `title` VARCHAR(45), `genre` VARCHAR(45), `publisher` VARCHAR(45), `cover` VARCHAR(150), `price` DOUBLE, `avgRating` DOUBLE)",
 	
-	Author: "CREATE TABLE IF NOT EXISTS `Author` (`authorID` INT AUTO_INCREMENT PRIMARY KEY, `authorLast` VARCHAR(45), `authorFirst` VARCHAR(45), `bio` TEXT)", 
+	Author: "CREATE TABLE IF NOT EXISTS `Author` (`authorID` INT(11) AUTO_INCREMENT PRIMARY KEY, `authorLast` VARCHAR(45), `authorFirst` VARCHAR(45), `bio` TEXT)", 
 
-	Description: "CREATE TABLE IF NOT EXISTS `Description` (`descriptionID` INT PRIMARY KEY, `Description` TEXT)",
+	Description: "CREATE TABLE IF NOT EXISTS `Description` (`descriptionID` INT(11) PRIMARY KEY, `Description` TEXT)",
 
 	continueForeignKey : "SET FOREIGN_KEY_CHECKS = 1",
 }
