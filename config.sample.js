@@ -3,11 +3,11 @@
 var config = {};
 
 config.db = {};
-config.db.port = YOUR_MYSQL_PORT_HERE; //This normally defaults to 3306 unless you changed it while installing mysql
-config.db.host = YOUR_MYSQL_HOST_HERE; //Likely localhost
-config.db.user = YOUR_MYSQL_USER_HERE; //Whatever you set it to, depends on how you installed it
-config.db.password = YOUR_MYSQL_PASSWORD_HERE; //Also whatever you set it to
-config.db.database = YOUR_MYSQL_DATABASE_HERE; //Whatever you want to name the database
+config.db.port = '3306'; //This normally defaults to 3306 unless you changed it while installing mysql
+config.db.host = 'localhost'; //Likely localhost
+config.db.user = 'root'; //Whatever you set it to, depends on how you installed it
+config.db.password = '12345678a'; //Also whatever you set it to
+config.db.database = 'Bookstore'; //Whatever you want to name the database
 
 config.session = {};
 config.session.secret = "keyboard cat"; //This should be a sufficiently unique key to handle sessions
