@@ -25,19 +25,17 @@ class Tabs extends React.Component {
     	<h3 class= "section-title">Product Description
  	<div class= "underline"></div>
 	</h3>
-	<p>ISBN: 9788817150446</p>
-	<p>Price: $9.00</p>
-	<p>Publisher: Penguin Publisher</p>
-	<p>Genre: <a href="#">Tragedy</a></p>
+	<p>ISBN: {this.props.isbn}</p>
+	<p>Price: ${this.props.price}</p>
+	<p>Publisher: {this.props.publisher}</p>
+	<p>Genre: <a href="#">{this.props.genre}</a></p>
   	</section>
 
   	<section id="content2">
 	<h3 class= "section-title">Author bio
 	<div class= "underline"></div>
 	</h3>
-	<p>
-     	William Shakespeare (1564–1616) was a poet, playwright, and actor who is widely regarded as one of the most influential 		writers in the history of the English language. Often referred to as the Bard of Avon, Shakespeare’s vast body of work includes comedic, tragic, and historical plays; poems; and 154 sonnets. His dramatic works have been translated into every major language and are performed more often than those of any other playwright.
-    	</p>
+	<p>{this.props.biography}</p>
   	</section>
 
   	<section id="content3">

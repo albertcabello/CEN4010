@@ -73,39 +73,43 @@ app.get('/book/:isbn', (req, res) => {
 				  genre: row.genre,
 				  publisher: row.publisher,
 				  avgRating: row.avgRating,
-				  description: row.description,
+				  description: row.Description,
 				  biography: row.bio,
 				  price: row.price
 				  }
 		})
 		res.json(books);
-		console.log(books[0]);
+		console.log(books);
 	  })
   
 	  // res.end()
 	})
   
-	app.post('/author/:authorFirst/:authorLast', (req, res) => {
-	  console.log("Fetching author info: " + req.params.authorLast)
+	app.get('/author/:authorFirst/:authorLast', (req, res) => {
 	  const firstName = req.params.authorFirst
 	  const lastName = req.params.authorLast
-	  const queryString = "SELECT * FROM Book WHERE authorID IN (SELECT authorID FROM Author WHERE authorLast = ? )"
+	  console.log("Fetching author info: " + firstName + " " + lastName)
+	  const queryString = "SELECT * FROM Book JOIN Author ON authorID = ID WHERE authorID IN (SELECT ID FROM Author WHERE authorLast = ?  AND authorFirst = ?)"
 	  connection.query(queryString, [lastName, firstName], (err, rows, fields) => {
 		  if (err) {
-			console.log("Failed to query for book: " + err)
+			console.log("Failed to query for author: " + err)
 			res.sendStatus(500)
 			return
 			// throw err
 		  }
 	  
 		  const booksByAuthor = rows.map((row) => {
-			return {title: row.title,
+			return {isbn:  row.ISBN,
+					title: row.title,
 					cover: row.cover,
-					price: row.price
+					price: row.price,
+					biography: row.bio
 					}
 		  })
 	  
-		  res.send(booksByAuthor)
+		  res.json(booksByAuthor);
+		  console.log(booksByAuthor);
+		  console.log(booksByAuthor.length);
 		})
   })
 

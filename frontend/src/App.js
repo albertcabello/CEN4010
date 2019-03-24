@@ -13,8 +13,8 @@ class App extends React.Component {
 
   	<BrowserRouter>
         <div>
- 	          <Route path="/book-description/:isbn" component = {BookInfo} />
-            <Route path="/author" render={(props) => <Author {...props} name = "William Shakespeare" />} /> 
+ 	          <Route path="/book/:isbn" component = {BookInfo} />
+            <Route path="/author/:authorFirst/:authorLast" component = {Author}/> 
         </div>
 	  </BrowserRouter>
 

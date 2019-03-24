@@ -8,15 +8,6 @@ const API = '/book/';
 class BookInfo extends React.Component {
   state = {
     isbn: this.props.match.params.isbn,
-    // response: {title: 'defa',
-    //             authorFirst: '',
-    //             authorLast: '',
-    //             cover: '',
-    //             genre: '',
-    //             publisher: '',
-    //             avgRating: '',
-    //             description: '',
-    //             biography: ''},
     response: [],
     responseToPost: '',
   };
@@ -38,8 +29,9 @@ class BookInfo extends React.Component {
       <div>
 	<Titles />
   {this.state.response.map(d => <Description  title = {(d.title)} description = {(d.description)}
-  price = {(d.price)} cover = {(d.cover)} first = {(d.authorFirst)} last = {(d.authorLast)}/>)}
-  <Tabs />
+  price = {(d.price)} cover = {(d.cover)} first = {(d.authorFirst)} last = {(d.authorLast)} biography = {(d.biography)}/>)}
+  {this.state.response.map(d => <Tabs  isbn = {this.state.isbn} biography = {(d.biography)}
+  price = {(d.price)} publisher = {(d.publisher)} genre = {(d.genre)}/>)}
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import React from "react";
+import {BrowserRouter, Route, Link} from "react-router-dom";
 
 class Description extends React.Component {
 
@@ -30,7 +31,10 @@ class Description extends React.Component {
   		<img class="modal-content" id="img01" src={this.props.cover}/>
 	</div>
 	<div class= "spec">
-	<h2 class="book-name">{this.props.title} by <a href= "/author">{this.props.first} {this.props.last}</a>
+	<h2 class="book-name">{this.props.title} by 
+	<Link to={{ pathname: '/author/' + this.props.first + '/' +  this.props.last, state: { biography: "heloooo"}}}>
+		{this.props.first} {this.props.last}
+	</Link>
 	<div class= "underline"></div>
 	</h2>
 	<p  class="price-wrapper">${this.props.price}
