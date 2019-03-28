@@ -22,11 +22,11 @@ class Author extends React.Component {
         })
        });
 		};
-		
+	
   render() {
 	var bookObjects = [];
 	{this.state.response.map(d => 
-		bookObjects.push(<BookSmall isbn = {(d.isbn)} title = {(d.title)} price = {(d.price)} cover = {(d.cover)} biography = {(d.biography)}/>)
+		bookObjects.push(<BookSmall isbn = {(d.isbn)} title = {(d.title)} price = {(d.price)} cover = {(d.cover)}/>)
 		)
 	};
 
@@ -38,7 +38,9 @@ class Author extends React.Component {
 	<div class= "underline"></div>
 	</h2></div>
 	<div class= "author-sidebar-wrapper">
-	<div class= "content"><p>{this.props.location.state[0]}</p></div>
+	<div class= "content">{this.state.response.map(d => 
+	<p key= {1}>{d.biography}</p>)}
+	</div>
 	<div class= "browse-wrapper">
 	<button class="sort-btn">Sort by latest<i class="fas fa-angle-down expand"></i></button>
 	<div class = "books">{bookObjects}</div>
