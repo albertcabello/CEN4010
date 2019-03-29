@@ -1,0 +1,16 @@
+.loginForm {
+	width: 350px;
+	display: block;
+	border-radius: 4px;
+	border: 1px #ddd solid;
+	padding: 15px;
+}
+
+.signIn {
+	font-family: "PT Serif Caption";
+	margin-bottom: 10px;
+}
+
+input {
+	display: block;
+}
