@@ -32,7 +32,7 @@ class Description extends React.Component {
 	</div>
 	<div class= "spec">
 	<h2 class="book-name">{this.props.title} by 
-	<Link to={{ pathname: '/author/' + this.props.first + '/' +  this.props.last, state: { biography: "heloooo"}}}>
+	<Link to={{ pathname: '/author/' + this.props.first + '/' +  this.props.last }}>
 		{this.props.first} {this.props.last}
 	</Link>
 	<div class= "underline"></div>
