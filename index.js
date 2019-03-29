@@ -53,65 +53,64 @@ function isAuthenticated(req, res, next) {
  *          Book Details            *
  ************************************/
 app.get('/book/:isbn', (req, res) => {
-	console.log("Fetching book with isbn: " + req.params.isbn)
-	  const ISBN = req.params.isbn
-	  const queryString =  "SELECT * FROM Book JOIN Description ON ISBN = descriptionID JOIN Author ON authorID = ID WHERE ISBN = ?"
-  
-	  connection.query(queryString, [ISBN], (err, rows, fields) => {
+	console.log("Fetching book with isbn: " + req.params.isbn);
+	const ISBN = req.params.isbn;
+	const queryString =  "SELECT * FROM Book JOIN Description ON ISBN = descriptionID JOIN Author ON authorID = ID WHERE ISBN = ?";
+
+	connection.query(queryString, [ISBN], (err, rows, fields) => {
 		if (err) {
-		  console.log("Failed to query for book: " + err)
-		  res.sendStatus(500)
+		  console.log("Failed to query for book: " + err);
+		  res.sendStatus(500);
 		  return
 		  // throw err
 		}
-	
+
 		const books = rows.map((row) => {
-		  return {title: row.title,
-				  authorFirst: row.authorFirst,
-				  authorLast: row.authorLast,
-				  cover: row.cover,
-				  genre: row.genre,
-				  publisher: row.publisher,
-				  avgRating: row.avgRating,
-				  description: row.Description,
-				  biography: row.bio,
-				  price: row.price
-				  }
-		})
+			return {title: row.title,
+				authorFirst: row.authorFirst,
+				authorLast: row.authorLast,
+				cover: row.cover,
+				genre: row.genre,
+				publisher: row.publisher,
+				avgRating: row.avgRating,
+				description: row.Description,
+				biography: row.bio,
+				price: row.price
+			};
+		});
+
 		res.json(books);
 		console.log(books);
-	  })
+	});
+});
   
-	  // res.end()
-	})
-  
-	app.get('/author/:authorFirst/:authorLast', (req, res) => {
-	  const firstName = req.params.authorFirst
-	  const lastName = req.params.authorLast
-	  console.log("Fetching author info: " + firstName + " " + lastName)
-	  const queryString = "SELECT * FROM Book JOIN Author ON authorID = ID WHERE authorID IN (SELECT ID FROM Author WHERE authorLast = ?  AND authorFirst = ?)"
-	  connection.query(queryString, [lastName, firstName], (err, rows, fields) => {
-		  if (err) {
-			console.log("Failed to query for author: " + err)
-			res.sendStatus(500)
-			return
+app.get('/author/:authorFirst/:authorLast', (req, res) => {
+	const firstName = req.params.authorFirst;
+	const lastName = req.params.authorLast;
+	console.log("Fetching author info: " + firstName + " " + lastName);
+	const queryString = "SELECT * FROM Book JOIN Author ON Author.authorID = Book.authorID WHERE Book.authorID IN (SELECT authorID FROM Author WHERE authorLast = ? AND authorFirst = ?)";
+	connection.query(queryString, [lastName, firstName], (err, rows, fields) => {
+		if (err) {
+			console.log("Failed to query for author: " + err);
+			res.sendStatus(500);
+			return;
 			// throw err
 		  }
-	  
-		  const booksByAuthor = rows.map((row) => {
+  
+		const booksByAuthor = rows.map((row) => {
 			return {isbn:  row.ISBN,
 					title: row.title,
 					cover: row.cover,
 					price: row.price,
 					biography: row.bio
-					}
-		  })
-	  
-		  res.json(booksByAuthor);
-		  console.log(booksByAuthor);
-		  console.log(booksByAuthor.length);
-		})
-  })
+			};
+		});
+  
+		res.json(booksByAuthor);
+		console.log(booksByAuthor);
+		console.log(booksByAuthor.length);
+	});
+});
 
 /************************************
  *       Profile Management         *
@@ -146,6 +145,15 @@ app.get('/ping', (req, res) => {
 
 app.get('/login', (req, res) => {
 	res.send("This will eventually be a login page");
+});
+
+app.get('/isLoggedIn', (req, res) => {
+	if (req.session.user) {
+		res.send({status: true});
+	}
+	else {
+		res.send({status: false});
+	}
 });
 
 //Starts a session 
