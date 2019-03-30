@@ -17,14 +17,18 @@ const port = process.env.PORT || 3001
 /************************************
  *           Middlewares            *
  ************************************/
-app.use(cors());
+let corsOptions = {
+	origin: 'http://localhost:3000',
+	credentials: true
+}
+app.use(cors(corsOptions));
 app.use(session({
 	secret: config.session.secret,
 	cookie: {
 		maxAge: config.session.maxAge,
 	},
 	saveUninitialized: false,
-	resave: false
+	resave: false,
 }));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -149,10 +153,10 @@ app.get('/login', (req, res) => {
 
 app.get('/isLoggedIn', (req, res) => {
 	if (req.session.user) {
-		res.send({status: true});
+		res.send({user: req.session.user});
 	}
 	else {
-		res.send({status: false});
+		res.send({error: false});
 	}
 });
 

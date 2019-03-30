@@ -1,7 +1,7 @@
 import React from "react";
-import Titles from "./Titles";
+import Header from "./Header/header.js";
 import BookSmall from "./BookInfoSmall";
-const API = '/author/';
+const API = 'http://localhost:3001/author/';
 
 class Author extends React.Component {
 	state = {
@@ -32,7 +32,7 @@ class Author extends React.Component {
 
     return (
       <div>
-	<Titles />
+	<Header />
 	<div class= "author-page-header">
 	<h2 class="book-name">More books by {this.state.authorFirst} {this.state.authorLast}
 	<div class= "underline"></div>

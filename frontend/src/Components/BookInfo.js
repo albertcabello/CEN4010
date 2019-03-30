@@ -1,9 +1,9 @@
 import React from "react";
 
-import Titles from "./Titles";
+import Header from "./Header/header.js";
 import Description from "./Description";
 import Tabs from "./Tabs";
-const API = '/book/';
+const API = 'http://localhost:3001/book/';
 
 class BookInfo extends React.Component {
   state = {
@@ -27,7 +27,7 @@ class BookInfo extends React.Component {
   render() {
     return (
       <div>
-	<Titles />
+	<Header />
   {this.state.response.map(d => <Description  title = {(d.title)} description = {(d.description)}
   price = {(d.price)} cover = {(d.cover)} first = {(d.authorFirst)} last = {(d.authorLast)} biography = {(d.biography)}/>)}
   {this.state.response.map(d => <Tabs  isbn = {this.state.isbn} biography = {(d.biography)}

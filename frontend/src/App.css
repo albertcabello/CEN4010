@@ -9,7 +9,7 @@ body {
   padding-top: 25px;
   padding-bottom: 25px;
   margin: auto;
-  max-width: 1120px !important;
+  max-width: 1200px !important;
   border-bottom-style: solid;
   border-bottom-color: #DCDCDC;
   border-bottom-width: 1px;
@@ -76,9 +76,7 @@ a:hover{
 }
 
 .search{
-	text-align: center;
 	width: 10px;
-	float: right;
 }
 
  /* Book description */

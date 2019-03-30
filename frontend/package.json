@@ -1,9 +1,9 @@
 {
   "name": "frontend",
   "version": "0.1.0",
-  "proxy": "http://localhost:3001/",
   "private": true,
   "dependencies": {
+    "bcrypt": "^3.0.5",
     "react": "^16.8.5",
     "react-dom": "^16.8.5",
     "react-router-dom": "^5.0.0",

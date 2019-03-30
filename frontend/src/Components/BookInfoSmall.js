@@ -1,7 +1,7 @@
 import React from "react";
 import {BrowserRouter, Route, Link} from "react-router-dom";
 import BookInfo from "./BookInfo";
-const API = '/book/';
+const API = 'http://localhost:3001/book/';
 
 class BookInfoSmall extends React.Component {
 	    state = {

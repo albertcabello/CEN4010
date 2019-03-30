@@ -73,7 +73,7 @@ export default class Login extends React.Component {
 			nickname: this.state.nickname
 		};
 
-		fetch('http://localhost:3001/login', {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)}).then((response) => {
+		fetch('http://localhost:3001/login', {method: "POST", credentials: "include", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)}).then((response) => {
 			return response.json();
 		}).then((json) => {
 			if (json.success) {
@@ -98,7 +98,7 @@ export default class Login extends React.Component {
 			username: this.state.username,
 			password: this.state.password
 		};
-		fetch('http://localhost:3001/login', {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)}).then((response) => {
+		fetch('http://localhost:3001/login', {method: "POST", credentials: "include", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)}).then((response) => {
 			return response.json();
 		}).then((json) => {
 			if (json.success) {
@@ -116,7 +116,7 @@ export default class Login extends React.Component {
 
 	render() {
 		if (this.state.redirectHome) {
-			return <Redirect to="/home"/>
+			return <Redirect to="/author/William/Shakespeare"/>
 		}
 		if (this.state.registering) {
 			return (
