@@ -7,15 +7,31 @@ class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {loggedIn: false};
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   componentDidMount() {
     console.log("DID MOUNT");
     let me = this;
-    fetch('http://localhost:3001/isLoggedIn', {credentials: "include"}).then((res) => {
-      return res.json();
+    fetch('http://localhost:3001/isLoggedIn', {credentials: "include"}).then((res) => { return res.json();
     }).then((json) => {
       console.log(json);
+      if (json.hasOwnProperty("user")) {
+        let tmpState = this.state;
+        tmpState.loggedIn = true;
+	this.setState(tmpState);
+      }
+    });
+  }
+
+  handleLogout(event) {
+    fetch('http://localhost:3001/logout', {credentials: "include"}).then((res) => {
+      return res.json();
+    }).then((json) => {
+      let tmpState = this.state;
+      tmpState.loggedIn = false;
+      this.setState(tmpState);
+      alert("Successfully logged out");
     });
   }
 
@@ -65,9 +81,10 @@ class Header extends React.Component {
 		<ul class="dropdown">
 			<li class="dropdown-item"><a href="">Cart</a></li>
 			<li class="dropdown-item"><a href="">Checkout</a></li>
-			<li>
+			<li class="dropdown-item">
 				<Link to={this.state.loggedIn ? "/accountInfo" : "/login"}>My Account</Link>
 			</li>
+			<li class="dropdown-item"><a href="#" onClick={this.handleLogout}>Logout</a></li>
 		</ul>
 		</li>
 

@@ -72,10 +72,10 @@ export default class Login extends React.Component {
 			lastName: this.state.lastName,
 			nickname: this.state.nickname
 		};
-
-		fetch('http://localhost:3001/login', {method: "POST", credentials: "include", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)}).then((response) => {
+		fetch('http://localhost:3001/register', {method: "POST", credentials: "include", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)}).then((response) => {
 			return response.json();
 		}).then((json) => {
+			console.log(json);
 			if (json.success) {
 				let tmpState = this.state;
 				tmpState.redirectHome = true;
@@ -85,6 +85,7 @@ export default class Login extends React.Component {
 				alert(json.error);
 			}
 		});
+		event.preventDefault();
 	}
 
 	handleRegisterSwitch(event) {
@@ -120,25 +121,25 @@ export default class Login extends React.Component {
 		}
 		if (this.state.registering) {
 			return (
-				<div>
-					<div>
-						Logo Here
+				<div className={styles['center']}>
+					<div className={styles['center']}>
+						<img className={styles['logo']} src="https://i.ibb.co/MSFL07F/logo-2x.png" />
 					</div>
-					<div className={styles['loginForm']}>
+					<div className={styles['loginForm']+' '+styles['center']}>
 						<form onSubmit={this.handleRegister}>
 							<h4 className={styles['signIn']}>First Name</h4>
-							<input type="text" value={this.state.firstName} onChange={this.handleFirstNameChange} />
+							<input className={styles['textbox']} type="text" value={this.state.firstName} onChange={this.handleFirstNameChange} />
 							<h4 className={styles['signIn']}>Last Name</h4>
-							<input type="text" value={this.state.lastName} onChange={this.handleLastNameChange} />
+							<input className={styles['textbox']} type="text" value={this.state.lastName} onChange={this.handleLastNameChange} />
 							<h4 className={styles['signIn']}>Email</h4>
-							<input type="text" value={this.state.email} onChange={this.handleEmailChange} />
+							<input className={styles['textbox']} type="text" value={this.state.email} onChange={this.handleEmailChange} />
 							<h4 className={styles['signIn']}>Username</h4>
-							<input type="text" value={this.state.username} onChange={this.handleUsernameChange} />
+							<input className={styles['textbox']} type="text" value={this.state.username} onChange={this.handleUsernameChange} />
 							<h4 className={styles['signIn']}>Password</h4>
-							<input type="password" value={this.state.password} onChange={this.handlePasswordChange} />
+							<input className={styles['textbox']} type="password" value={this.state.password} onChange={this.handlePasswordChange} />
 							<h4 className={styles['signIn']}>Nickname (for reviews)</h4>
-							<input type="text" value={this.state.nickname} onChange={this.handleNicknameChange} />
-							<input type="submit" value="Register!" />
+							<input className={styles['textbox']} type="text" value={this.state.nickname} onChange={this.handleNicknameChange} />
+							<input className={styles['submit']} style={{margin: '20px 0', backgroundColor: '#8abbff'}} type="submit" value="Register!" />
 						</form>
 					</div>
 				</div>
@@ -147,19 +148,27 @@ export default class Login extends React.Component {
 		}
 		else {
 			return (
-				<div>
-					<div>
-						Logo Here
+				<div className={styles['center']}>
+					<div className={styles['center']}>
+						<img className={styles['logo']} src="https://i.ibb.co/MSFL07F/logo-2x.png" />
 					</div>
-					<div className={styles['loginForm']}>
+					<div className={styles['loginForm']+' '+styles['center']}>
+						<div> 
+							<h1 className={styles['signIn']}>Sign In</h1>
+						</div>
 						<form onSubmit={this.handleSubmit}>
 							<h4 className={styles['signIn']}>Username</h4>
-							<input type="text" value={this.state.username} onChange={this.handleUsernameChange} />
+							<input className={styles['textbox']} type="text" value={this.state.username} onChange={this.handleUsernameChange} />
 							<h4 className={styles['signIn']}>Password</h4>
-							<input type="password" value={this.state.password} onChange={this.handlePasswordChange} />
-							<input type="submit" value="Submit" />
+							<input className={styles['textbox']} type="password" value={this.state.password} onChange={this.handlePasswordChange} />
+							<input className={styles['submit']} style={{backgroundColor: '#8abbff'}} type="submit" value="Submit" />
 						</form>
-						<button type="button" onClick={this.handleRegisterSwitch}>Register New User</button>
+						<div style={{width: '100%', height: '4px', borderBottom: '1px solid #ddd', textAlign: 'center', padding: '10px 0'}}>
+							<span style={{fontSize: '9px', backgroundColor: '#FFFFFF', padding: '0 5px', color: '#777'}}>
+								New to Booker?
+							</span>
+						</div>
+						<button className={styles['submit']} style={{margin: '20px 0'}} type="button" onClick={this.handleRegisterSwitch}>Register New User</button>
 					</div>
 				</div>
 			);
