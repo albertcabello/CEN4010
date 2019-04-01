@@ -92,7 +92,7 @@ app.get('/author/:authorFirst/:authorLast', (req, res) => {
 	const firstName = req.params.authorFirst;
 	const lastName = req.params.authorLast;
 	console.log("Fetching author info: " + firstName + " " + lastName);
-	const queryString = "SELECT * FROM Book JOIN Author ON Author.authorID = Book.authorID WHERE Book.authorID IN (SELECT authorID FROM Author WHERE authorLast = ? AND authorFirst = ?)";
+	const queryString = "SELECT * FROM Book JOIN Author ON authorID = ID WHERE authorID IN (SELECT ID FROM Author WHERE authorLast = ? AND authorFirst = ?)";
 	connection.query(queryString, [lastName, firstName], (err, rows, fields) => {
 		if (err) {
 			console.log("Failed to query for author: " + err);
@@ -112,7 +112,6 @@ app.get('/author/:authorFirst/:authorLast', (req, res) => {
   
 		res.json(booksByAuthor);
 		console.log(booksByAuthor);
-		console.log(booksByAuthor.length);
 	});
 });
 
@@ -418,7 +417,6 @@ app.delete('/card', isAuthenticated, (req, res) => {
 	});
 });
 
- // localhost:3001
- app.listen(port, () => {
+app.listen(port, () => {
 	console.log('Server is up and listening on' , port)
   }) //This is the port express will listen on

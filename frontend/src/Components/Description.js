@@ -31,8 +31,7 @@ class Description extends React.Component {
   		<img class="modal-content" id="img01" src={this.props.cover}/>
 	</div>
 	<div class= "spec">
-	<h2 class="book-name">{this.props.title} by 
-	<Link to={{ pathname: '/author/' + this.props.first + '/' +  this.props.last }}>
+	<h2 class="book-name">{this.props.title} by <Link to={{ pathname: '/author/' + this.props.first + '/' +  this.props.last }}>
 		{this.props.first} {this.props.last}
 	</Link>
 	<div class= "underline"></div>
