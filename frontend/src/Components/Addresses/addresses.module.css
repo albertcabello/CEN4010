@@ -1,0 +1,79 @@
+.container {
+	display: block;
+	max-width: 1000px !important;
+	padding: 25px 0;
+	margin: auto;
+	font-family: PT Serif Caption;
+	font-size: 28px;
+	font-weight: 400;
+}
+
+.firstAddress {
+	border-style: dashed;
+	height: 266px;
+	width: 320px;
+	border-width: 2px;
+	box-sizing: border-box;
+	border-color: #C7C7C7;
+	text-align: center;
+	display: table-cell;
+	vertical-align: middle;
+	border-radius: 4px;
+	background-color: #fff;
+}
+
+.address {
+	display: block;
+	height: 266px;
+	width: 320px;
+	border-width: 1px;
+	box-sizing: border-box;
+	border-color: #c7c7c7;
+	border-radius: 4px;
+	background-color: #fff;
+	border-style: solid;
+}
+
+.addressInformation {
+	font-size: 12px;
+	padding: 25px;
+}
+
+.editing {
+	font-size: 12px;
+	padding: 25px;
+}
+
+.innerBox {
+	border-radius: 4px;
+	position: relative;
+	padding: 14px 18px;
+}
+
+.column {
+	width: auto;
+	float: left;
+	margin-right: 13px;
+	margin-bottom: 13px;
+}
+
+.extraPadding {
+	padding: 20 26px !important;
+}
+
+.spacingMedium {
+	margin-bottom: 25px !important;
+}
+
+.row {
+	width: 100%;
+	margin-bottom: 4px;
+}
+
+.defaultSection {
+	height: 40px;
+	border-bottom: 1px solid #c7c7c7;
+	padding-left: 20px;
+	padding-top: 11px;
+	font-size: 13px;
+}
