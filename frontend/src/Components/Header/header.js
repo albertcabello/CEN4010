@@ -80,6 +80,9 @@ class Header extends React.Component {
 		<li class= "menu-item"><a href="">Store<i class="fas fa-angle-down expand"></i></a>
 		<ul class="dropdown">
 			<li class="dropdown-item"><a href="">Cart</a></li>
+			<li class="dropdown-item">
+				<Link to={this.state.loggedIn ? "/Wishlist" : "/login"}>Wishlist</Link>
+			</li>		  
 			<li class="dropdown-item"><a href="">Checkout</a></li>
 			<li class="dropdown-item">
 				<Link to={this.state.loggedIn ? "/accountInfo" : "/login"}>My Account</Link>
@@ -87,6 +90,7 @@ class Header extends React.Component {
 			<li class="dropdown-item"><a href="#" onClick={this.handleLogout}>Logout</a></li>
 		</ul>
 		</li>
+		
 
 		<li class = "menu-item"><a href="#"><i class="fas fa-shopping-cart"></i>0 items</a></li>
 		<li class="menu-item">

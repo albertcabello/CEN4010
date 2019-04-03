@@ -36,12 +36,21 @@ let tables = {
 		     "`zip` varchar(5) NOT NULL," +
 		     "`instr` varchar(1000)," +
 		     "`code` varchar(20)," +
-		     "PRIMARY KEY (`id`))",
+			 "PRIMARY KEY (`id`))",
+	userWishlists:"CREATE TABLE IF NOT EXISTS `userWishlists` (" + 
+			 "`userId` int(11) NOT NULL," +
+			 "wishlistId int(11) NOT NULL,"+
+			 "FOREIGN KEY (userId) REFERENCES `users`(`id`))", 
 
 	userAddresses: "CREATE TABLE IF NOT EXISTS `userAddresses` (" +
 			 "`userId` int(11) NOT NULL, addressId int(11) NOT NULL," +
 			 "FOREIGN KEY (userId) REFERENCES `users`(`id`)," + 
 			 "FOREIGN KEY (addressId) REFERENCES `addresses`(`id`))",
+	wishlists:"CREATE TABLE IF NOT EXISTS `wishlists` (" +
+		 	 "`wishlistId` int(11) NOT NULL,"+
+		  	 "`ISBN` BIGINT NOT NULL," +
+			 "PRIMARY KEY (wishlistId,ISBN),"+
+			"FOREIGN KEY (ISBN) REFERENCES `Book`(`ISBN`))",			 
 	
 	cards: "CREATE TABLE IF NOT EXISTS `cards` (" + 
 		 "`id` int(11) NOT NULL AUTO_INCREMENT, `userId` int(11) NOT NULL, cardNumber varchar(19) NOT NULL," +
@@ -52,6 +61,7 @@ let tables = {
 	Author: "CREATE TABLE IF NOT EXISTS `Author` (`ID` INT(11) AUTO_INCREMENT PRIMARY KEY, `authorLast` VARCHAR(45), `authorFirst` VARCHAR(45), `bio` TEXT)", 
 	 
 	Description: "CREATE TABLE IF NOT EXISTS `Description` (`descriptionID` BIGINT PRIMARY KEY, `Description` TEXT)",
+	
 
 	continueForeignKey : "SET FOREIGN_KEY_CHECKS = 1",
 }

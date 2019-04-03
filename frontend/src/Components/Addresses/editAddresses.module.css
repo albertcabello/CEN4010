@@ -1,0 +1,19 @@
+.center {
+	display: block;
+	width: 50%;
+	margin: 0 auto;
+}
+
+.editForm {
+	margin-top: 25px;
+	width: 500px;
+	display: block;
+	padding: 15px;
+}
+
+.labeling {
+	font-weight: 700;
+	font-size: 21px;
+	line-height: 1.3;
+	font-family: "PT Serif Caption";
+}

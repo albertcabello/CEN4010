@@ -6,6 +6,12 @@ import BookInfo from "./Components/BookInfo";
 import Header from "./Components/Header/header.js";
 import Login from "./Components/Login/login.js";
 import Home from "./Components/Home/home.js";
+import wishlist from "./Components/wishlist/wishlist";
+
+
+import AccountInfo from "./Components/AccountInfo/accountInfo.js";
+import Addresses from "./Components/Addresses/addresses.js";
+import EditAddresses from "./Components/Addresses/editAddresses.js";
 
 class App extends React.Component {
   render() {
@@ -18,7 +24,12 @@ class App extends React.Component {
 	    <Route path="/home" component = {Home} />
 	    <Route path="/login" component = {Login} />
 	    <Route path="/book/:isbn" component = {BookInfo} />
+      <Route path="/wishlist" component = {wishlist} />
+
             <Route path="/author/:authorFirst/:authorLast" component = {Author}/> 
+	    <Route exact path="/accountInfo" component = {AccountInfo} />
+	    <Route exact path="/accountInfo/addresses" component = {Addresses} />
+	    <Route exact path="/accountInfo/addresses/edit" component = {EditAddresses} />
           </div>
 	</BrowserRouter>
       </div>
