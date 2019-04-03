@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 
 import Header from '../Header/header.js';
 
@@ -44,7 +44,6 @@ export default class Addresses extends React.Component {
 	}
 
 	render() {
-		console.log(this.state.defaultAddressId);
 		let groups = this.state.addresses.map( (e, i) => {
 			return i % 3 === 0 ? this.state.addresses.slice(i, i+3) : null;
 		}).filter((e) => { return e; });
@@ -68,11 +67,13 @@ export default class Addresses extends React.Component {
 						<div className={styles['column']}>
 							<div className={styles['address']}>
 								<div className={styles['addressInformation']}>
-									<span style={{fontSize: '17px' ,fontWeight: 'bold' }}>Alberto Cabello</span>
-									<br/>Address Line 1<br/>Address line 2<br/>City, State<br/>Zip<br/><br />Instr<br/> {element.addressId}
+									<span style={{fontSize: '17px' ,fontWeight: 'bold' }}>{element.fullName}</span>
+									<br/>{element.firstLine}<br/>{element.secondLine}<br/>{element.city}, {element.state}<br/>{element.zip}
+									<br/><br />{element.instr}<br/>Code: {element.code}
 								</div>
 								<div className={styles['editing']}> 
-									<span> Edit | Delete </span>
+									<span> <Link to={{pathname:'/accountInfo/addresses/edit', state: {editing: true, user: element}}}> Edit </Link> 
+									| Delete | Set as Default</span>
 								</div>
 							</div>
 						</div>
@@ -88,11 +89,16 @@ export default class Addresses extends React.Component {
 									<span>Default Shipping Address</span>
 								</div>
 								<div className={styles['addressInformation']}>
-									<span style={{fontSize: '17px' ,fontWeight: 'bold' }}>Alberto Cabello</span>
-									<br/>Address Line 1<br/>Address line 2<br/>City, State<br/>Zip<br/><br />Instr<br/> {element.addressId}
+									<span style={{fontSize: '17px' ,fontWeight: 'bold' }}>{element.fullName}</span>
+									<br/>{element.firstLine}<br/>{element.secondLine}<br/>{element.city}, {element.state}<br/>{element.zip}
+									<br/><br />{element.instr}<br/>Code: {element.code}
 								</div>
 								<div className={styles['editing']}> 
-									<span> Edit | Delete </span>
+									<span> <Link to={{pathname:'/accountInfo/addresses/edit', 
+											  state: {editing: true, user: element},
+											 }
+											}>
+										Edit </Link> | Delete | Set as Default</span>
 								</div>
 							</div>
 						</div>
@@ -103,11 +109,16 @@ export default class Addresses extends React.Component {
 						<div className={styles['column']}>
 							<div className={styles['address']}>
 								<div className={styles['addressInformation']}>
-									<span style={{fontSize: '17px' ,fontWeight: 'bold' }}>Alberto Cabello</span>
-									<br/>Address Line 1<br/>Address line 2<br/>City, State<br/>Zip<br/><br />Instr<br/> {element.addressId}
+									<span style={{fontSize: '17px' ,fontWeight: 'bold' }}>{element.fullName}</span>
+									<br/>{element.firstLine}<br/>{element.secondLine}<br/>{element.city}, {element.state}<br/>{element.zip}
+									<br/><br />{element.instr}<br/>Code: {element.code}
 								</div>
 								<div className={styles['editing']}> 
-									<span> Edit | Delete </span>
+									<span> <Link to={{pathname:'/accountInfo/addresses/edit', 
+											  state: {editing: true, user: element},
+											 }
+											}>
+										Edit </Link> | Delete | Set as Default</span>
 								</div>
 							</div>
 						</div>
@@ -148,43 +159,5 @@ export default class Addresses extends React.Component {
 				</div>
 			);
 		}
-		/*
-		return (
-			<div>
-				<Header />
-				<div className={styles['container']}>
-					<div className={styles['spacingMedium']}>
-						Your Addresses
-					</div>
-					<div className={styles['row']}>
-						<div className={styles['column']}>
-							<div className={styles['firstAddress']}>
-								<div style={{color: '#767676'}}>
-									<i className="fas fa-plus"></i>
-								</div>
-								<div style={{fontSize: '17px', fontWeight: '700', color: '#767676'}}>
-									Add Address
-								</div>
-							</div>
-						</div>
-						<div className={styles['column']}> 
-							<div className={styles['address']}>
-								<div className={styles['defaultSection']}> 
-									<span>Default Shipping Address</span>
-								</div>
-								<div className={styles['addressInformation']}>
-									<span style={{fontSize: '17px' ,fontWeight: 'bold' }}>Alberto Cabello</span>
-									<br/>Address Line 1<br/>Address line 2<br/>City, State<br/>Zip<br/><br />Instr<br/> code
-								</div>
-								<div className={styles['editing']}> 
-									<span> Edit | Delete </span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		);
-		*/
 	}
 }

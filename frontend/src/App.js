@@ -9,6 +9,10 @@ import Home from "./Components/Home/home.js";
 import wishlist from "./Components/wishlist/wishlist";
 
 
+import AccountInfo from "./Components/AccountInfo/accountInfo.js";
+import Addresses from "./Components/Addresses/addresses.js";
+import EditAddresses from "./Components/Addresses/editAddresses.js";
+
 class App extends React.Component {
   render() {
     return (
@@ -23,6 +27,9 @@ class App extends React.Component {
       <Route path="/wishlist" component = {wishlist} />
 
             <Route path="/author/:authorFirst/:authorLast" component = {Author}/> 
+	    <Route exact path="/accountInfo" component = {AccountInfo} />
+	    <Route exact path="/accountInfo/addresses" component = {Addresses} />
+	    <Route exact path="/accountInfo/addresses/edit" component = {EditAddresses} />
           </div>
 	</BrowserRouter>
       </div>
