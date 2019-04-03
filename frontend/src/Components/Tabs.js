@@ -1,15 +1,21 @@
 import React from "react";
 
 class Tabs extends React.Component {
+	constructor(props) {
+		super();
+		this.state = {
+				expanded: false
+		};
+		this.readMore = this.readMore.bind(this);
+}
 
-  readMore() {
- 	var moreText = document.getElementById("more");
-  	var btnText = document.getElementById("myBtn");
-
-    	moreText.style.display = "inline";
-  }
-
+readMore() {
+	this.setState(state => ({
+		expanded: !state.expanded
+	}));
+}
   render() {
+		let comment_class = this.state.expanded ? "commentClicked" : "commentInactive";
     return (
       	<div class= "tabs">
       	<input id="tab1" type="radio" name="tabs" checked/>
@@ -52,9 +58,13 @@ class Tabs extends React.Component {
 	<span class="fas fa-star checked"></span>
 	</div>
 	<p>It is always so satisfying to read a book you've heard so much about throughout your life. You should have seen how excited I 		got when Juliet started saying "Romeo, o Romeo"!</p>
-	<button onclick="readMore()" id="more-comments">2 comments<i class="fas fa-angle-down expand"></i></button>
+	<button onClick={() => this.readMore()} className= {comment_class}>2 comments<i class="fas fa-angle-down expand"></i></button>
+	<span id="more">
+		<a href="#">Nagham</a><p>Oh my god, same.</p><button onclick="reply()" class="reply">Reply</button>
+		<p><a href="#">Jose</a><p>I agree because were ever you go you all ways going to here about the famous Shakespear and about romeo and Juliet. In Mostly every high school movie you will see that they are doing the play and then you read the actual book and its a fascinating experience of finally reading it after hearing about it.</p><button onclick="reply()" class="reply">Reply</button></p>
+	</span>
 	</div>
-        <div class= "user-review">
+  <div class= "user-review">
 	<a href="#">Aishu Reh</a>'s review
 	<div class= "rating">
        	<span class="fas fa-star checked"></span>
@@ -64,11 +74,7 @@ class Tabs extends React.Component {
 	<span class="fas fa-star"></span>
 	</div>
 	<p>Being one of the most famous plays through all time, Romeo and Juliet still captivates readers and audiences around the world. This is a fine example of the fact that time doesn't really have to change us. We can still understand and identify with great stories from a long time ago. Romeo and Juliet is a play that centers around forbiddem love between two young, rebellious people. But the play is much more than that.</p>
-	<button onclick="readMore()" id="more-comments">0 comments<i class="fas fa-angle-down expand"></i></button>
-	<span id="more">
-		<a href="#">Nagham</a><p>Oh my god, same.</p><button onclick="reply()" class="reply">Reply</button>
-		<a href="#">Jose</a><p>I agree because were ever you go you all ways going to here about the famous Shakespear and about romeo and Juliet. In Mostly every high school movie you will see that they are doing the play and then you read the actual book and its a fascinating experience of finally reading it after hearing about it.</p><button onclick="reply()" class="reply">Reply</button>
-	</span>
+	<button onclick={this.readMore} className={comment_class}>0 comments<i class="fas fa-angle-down expand"></i></button>
 	</div>
   	</section>
       </div>
