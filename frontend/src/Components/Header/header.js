@@ -11,11 +11,8 @@ class Header extends React.Component {
   }
 
   componentDidMount() {
-    console.log("DID MOUNT");
-    let me = this;
     fetch('http://localhost:3001/isLoggedIn', {credentials: "include"}).then((res) => { return res.json();
     }).then((json) => {
-      console.log(json);
       if (json.hasOwnProperty("user")) {
         let tmpState = this.state;
         tmpState.loggedIn = true;
