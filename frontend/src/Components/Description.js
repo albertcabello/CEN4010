@@ -1,5 +1,8 @@
 import React from "react";
 import {BrowserRouter, Route, Link} from "react-router-dom";
+import { link } from "fs";
+
+
 
 class Description extends React.Component {
 
@@ -15,12 +18,31 @@ class Description extends React.Component {
             display: 'block'
         });
   }
-
+	//handleWishlist(event) {
+	//	let body = {
+	//	};
+	//}
   closeEnlargedImg(){
  	this.setState({
 	    display: 'none'
         });
-  }
+	}
+	handleWishlist(event) {
+		var url = window.location.pathname;
+		var file = url.substring(url.lastIndexOf('/')+1);
+		alert(file);
+		let body = {
+			isbn: file
+		};
+		
+
+
+		fetch('http://localhost:3001/userWishlist', {method: "POST", credentials: "include", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)}).then((response) => {	
+		return response.json();
+		})
+
+		};
+	
 
   render() {
     return (
@@ -47,9 +69,13 @@ class Description extends React.Component {
         </p>
 	<p>{this.props.description}</p>	
         <button type="submit" name="add-to-cart" value="892" class="add-to-cart-button">Add to cart</button>
-	<button class="wishlist">
+	<button class="wishlist" onClick={this.handleWishlist}>
   		<i class="fas fa-heart heart"></i>
-  		<span>Add to wishlist</span>
+  		<span>Add to wishlist </span>
+			<script>
+			window.location.pathname;
+						</script>
+
 	</button>
 	</div>
       </div>
