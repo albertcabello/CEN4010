@@ -11,7 +11,7 @@ let connection = mysql.createConnection({
 //Add the commands that you use to create your tables here in another key, always use CREATE TABLE IF NOT EXISTS
 //This file shouldn't have to change except for this object as well as any for loops you need to create dummy data
 let tables = {
-	//stopForeignKey : "SET FOREIGN_KEY_CHECKS = 0", 
+	stopForeignKey : "SET FOREIGN_KEY_CHECKS = 0", 
 
 	users : "CREATE TABLE IF NOT EXISTS `users` (" + 
 		  "`id` int(11) NOT NULL AUTO_INCREMENT," +
@@ -65,7 +65,7 @@ let tables = {
 	Description: "CREATE TABLE IF NOT EXISTS `Description` (`descriptionID` BIGINT PRIMARY KEY, `Description` TEXT)",
 	
 
-	//continueForeignKey : "SET FOREIGN_KEY_CHECKS = 1",
+	continueForeignKey : "SET FOREIGN_KEY_CHECKS = 1",
 }
 
 let inserts = {
