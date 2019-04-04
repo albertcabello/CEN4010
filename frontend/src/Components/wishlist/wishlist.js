@@ -36,7 +36,7 @@ export default class AccountInfo extends React.Component {
 		if (this.state.loggedIn === undefined) { //This is just so the redirect doesn't immediately trigger and cause an unmount
 			return (
             <div>
-                
+
             </div>
 			);
        

@@ -40,6 +40,7 @@ let tables = {
 	userWishlists:"CREATE TABLE IF NOT EXISTS `userWishlists` (" + 
 			 "`userId` int(11) NOT NULL," +
 			 "wishlistId int(11) NOT NULL,"+
+			 "PRIMARY KEY (userId,wishlistId),"+
 			 "FOREIGN KEY (userId) REFERENCES `users`(`id`))", 
 
 	userAddresses: "CREATE TABLE IF NOT EXISTS `userAddresses` (" +
@@ -50,6 +51,7 @@ let tables = {
 		 	 "`wishlistId` int(11) NOT NULL,"+
 		  	 "`ISBN` BIGINT NOT NULL," +
 			 "PRIMARY KEY (wishlistId,ISBN),"+
+      		 "FOREIGN KEY (wishlistId) REFERENCES `userWishlists`(`wishlistId`)," + 
 			"FOREIGN KEY (ISBN) REFERENCES `Book`(`ISBN`))",			 
 	
 	cards: "CREATE TABLE IF NOT EXISTS `cards` (" + 
