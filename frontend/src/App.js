@@ -21,7 +21,7 @@ class App extends React.Component {
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=PT+Serif+Caption" />
   	<BrowserRouter>
           <div>
-	    <Route path="/home" component = {Home} />
+	    <Route exact path="/" component = {Home} />
 	    <Route path="/login" component = {Login} />
 	    <Route path="/book/:isbn" component = {BookInfo} />
       <Route path="/wishlist" component = {wishlist} />
