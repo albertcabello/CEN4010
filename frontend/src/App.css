@@ -302,11 +302,11 @@ section {
   padding-bottom: 5px;
 }
 
-input {
+.tabs input {
   display: none;
 }
 
-label {
+.tabs label {
   display: inline-block;
   margin: 0 0 -1px;
   padding: 15px 25px;
@@ -316,12 +316,12 @@ label {
   border: 1px solid transparent;
 }
 
-label:hover {
+.tabs label:hover {
   color: #c3ad70;
   cursor: pointer;
 }
 
-input:checked + label {
+.tabs input:checked + label {
   color: #c3ad70;
   border: 1px solid #DCDCDC;
   border-top: 1px solid #DCDCDC;
@@ -335,7 +335,16 @@ input:checked + label {
   display: block;
 }
 
-#more-comments {
+.commentClicked{
+  color: #c3ad70;  
+  border: 1px solid #fff;
+  padding-bottom: 10px;
+  background-color: #fff;
+  font-family: PT Serif Caption;
+  cursor: pointer;
+}
+
+.commentInactive{
   color: black;
   border: 1px solid #fff;
   padding-bottom: 10px;
@@ -344,11 +353,7 @@ input:checked + label {
   cursor: pointer;
 }
 
-#more-comments:hover{
-  color: #c3ad70;
-}
-
-#more-comments:active {
+.commentClicked + #more{
   display: block;
 }
 
@@ -367,6 +372,7 @@ input:checked + label {
 .author-sidebar-wrapper .content{
   float: left;
   padding-left: 70px;
+  padding-right: 20px;
   max-width: 300px;
   height: 870px;
   font-size: 15px;
