@@ -392,10 +392,10 @@ function checkCard(cardNumber) {
 }
 
 app.post('/card', isAuthenticated, (req, res) => {
-	if (!checkCard(req.body.cardNumber)) {
-		res.status(400).send({error: "Credit card number is not valid"});
-		return;
-	}
+	//if (!checkCard(req.body.cardNumber)) {
+	//	res.status(400).send({error: "Credit card number is not valid"});
+	//	return;
+	//}
 	let query = `INSERT INTO cards (userId, cardNumber) VALUES (${req.session.user.id}, ?)`;
 	connection.query(query, req.body.cardNumber, (err, results) => {
 		if (err) res.status(400).send({error: "Couldn't save the credit card"});
@@ -420,3 +420,41 @@ app.delete('/card', isAuthenticated, (req, res) => {
 app.listen(port, () => {
 	console.log('Server is up and listening on' , port)
   }) //This is the port express will listen on
+
+
+
+/************************************
+ *   		Wishlist 			    *
+ ************************************/
+app.delete('/wishlist', isAuthenticated, (req, res) => {
+	let query = `DELETE FROM userWishlists WHERE userId = ${req.session.user.id} and wishlistId = ${req.session.user.id}`;
+	connection.query(query, (err, results) => {
+		if (err) res.status(400).send({error: "Error removing the address"});
+	 else res.status(200).send({success: "Wishlist removed"});
+	});
+});
+
+app.post('/wishlist', isAuthenticated, (req, res) => {
+	let query = `INSERT IGNORE INTO userWishlists (userId, wishlistId) VALUES (${req.session.user.id}, ${req.session.user.id})`;
+
+
+	connection.query(query, (err, results) => {
+	//	if (err) res.status(400).send({error: "Couldn't save the wishlist"});
+		 res.status(200).send({success: "Added wishlist"});
+	});
+});
+app.post('/userwishlist', isAuthenticated, (req, res) => {
+	let query = `INSERT INTO Wishlists (wishlistId, isbn) VALUES (${req.session.user.id}, ?)`;
+	connection.query(query, req.body.isbn, (err, results) => {
+		if (err) res.status(400).send({error: "Couldn't save the wishlist"});
+		else res.status(200).send({success: "Added wishlist"});
+	});
+});
+
+app.delete('/userwishlist', isAuthenticated, (req, res) => {
+	let query = `DELETE FROM Wishlists WHERE wishlistId = ${req.session.user.id} and ISBN = ?`;
+	connection.query(query, (err, results) => {
+		if (err) res.status(400).send({error: "Error removing the Wishlist"});
+	 else res.status(200).send({success: "Wishlist removed"});
+	});
+});
