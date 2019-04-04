@@ -18,7 +18,7 @@ class Author extends React.Component {
       return response.json();
       }).then(result => {
          this.setState({
-          response: result
+					response: result
         })
        });
 		};
@@ -38,8 +38,7 @@ class Author extends React.Component {
 	<div class= "underline"></div>
 	</h2></div>
 	<div class= "author-sidebar-wrapper">
-	<div class= "content">{this.state.response.map(d => 
-	<p key= {1}>{d.biography}</p>)}
+	<div class= "content">{this.state.response.slice(0, (1)).map(post => <p data={post} key={post.isbn}>{post.biography}</p>)}
 	</div>
 	<div class= "browse-wrapper">
 	<button class="sort-btn">Sort by latest<i class="fas fa-angle-down expand"></i></button>
