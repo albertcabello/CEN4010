@@ -88,6 +88,32 @@ export default class Cards extends React.Component {
 			return i % 3 === 0 ? this.state.cards.slice(i, i+3) : null;
 		}).filter((e) => { return e; });
 		
+		if (groups.length === 0) {
+			return (
+				<div>
+					<Header />
+					<div className={styles['container']}>
+						<div className={styles['spacingMedium']}>
+							Your Credit Cards
+						</div>
+						<div className={styles['column']}>
+							<Link to={{pathname:'/accountInfo/cards/edit', state: {editing: false}}}>
+								<span>
+									<div className={styles['firstAddress']}>
+										<div style={{color: '#767676'}}>
+											<i className="fas fa-plus"></i>
+										</div>
+										<div style={{fontSize: '17px', fontWeight: '700', color: '#767676'}}>
+											Add Credit Card
+										</div>
+									</div>
+								</span>
+							</Link>
+						</div>
+					</div>
+				</div>
+			);
+		}
 		let me = this;
 		let rows = groups.map((row, rowIndex) => {
 			let entries = row.map((element, elementIndex) => {
@@ -102,7 +128,7 @@ export default class Cards extends React.Component {
 											<i className="fas fa-plus"></i>
 										</div>
 										<div style={{fontSize: '17px', fontWeight: '700', color: '#767676'}}>
-											Add Address
+											Add Credit Card
 										</div>
 									</div>
 								</span>

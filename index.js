@@ -225,6 +225,7 @@ app.put('/update/', isAuthenticated, async (req, res) => {
 			query = query + `, ${changes[i]} = ?`; //Notice that this is different with a comma
 		}
 		if (changes[i] === 'password') {
+			console.log("NEW PASSWORD", changes[i]);
 			//This wraps the hashing function into a promise so that we can await it before continuing the loop
 			let hashedPassword = await new Promise((resolve, reject) => {
 				bcrypt.hash(req.body[changes[i]], 10, (err, hash) => {
@@ -242,14 +243,19 @@ app.put('/update/', isAuthenticated, async (req, res) => {
 	console.log(query, vals);
 	//</query building stage>
 	connection.query(query, vals, (err, results) => {
-		if (err) res.status(400).send({error: "Error updating the user object, please try again"});
-		query = `SELECT * FROM users WHERE id = ${req.session.user.id}`;
-		connection.query(query, (err, results) => {
-			if (err) res.status(400).send({error: "Error getting user object back"});
-			req.session.user = results[0];
-			delete req.session.user.password;
-			res.status(200).send({success: "User updated", user: results[0]});
-		});
+		if (err) {
+			res.status(400).send({error: "Error updating the user object, please try again"});
+			console.log(err);
+		}
+		else {
+			query = `SELECT * FROM users WHERE id = ${req.session.user.id}`;
+			connection.query(query, (err, results) => {
+				if (err) res.status(400).send({error: "Error getting user object back"});
+				req.session.user = results[0];
+				delete req.session.user.password;
+				res.status(200).send({success: "User updated", user: results[0]});
+			});
+		}
 	});
 });
 
@@ -391,13 +397,14 @@ app.put('/address', isAuthenticated, (req, res) => {
 
 app.get('/setDefaultAddress/:id', (req, res) => {
 	let query = `UPDATE users SET defaultShipping = ? where id = ?`;
-	let params = [req.params.id, req.session.user.id];
+	let params = [parseInt(req.params.id), req.session.user.id];
 	console.log(query, params);
 	connection.query(query, params, (err, results) => {
 		if (err) {
 			res.status(400).send({error: "Error updating the default password"});
 		}
 		else {
+			req.session.user.defaultShipping = parseInt(req.params.id);
 			res.status(200).send({success: "Default updated"});
 		}
 	});

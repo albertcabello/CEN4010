@@ -61,9 +61,7 @@ export default class EditProfile extends React.Component {
 			nickname: this.state.user.nickname
 		}
 		if (this.state.user.password !== '') {
-			console.log("NEW PASSWORD", this.state.user.password);
 			body.password = this.state.user.password;
-			return;
 		}
 		fetch('http://localhost:3001/update', {method: "PUT" , credentials: "include", headers: {"Content-Type": "application/json"},  body: JSON.stringify(body)}).then((res) => {
 			return res.json();
