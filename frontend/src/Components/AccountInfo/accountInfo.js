@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import Header from '../Header/header.js';
 import styles from './accountInfo.module.css';
@@ -53,55 +53,61 @@ export default class AccountInfo extends React.Component {
 						Your Account
 						<div className={styles['cardRow']}>
 							<div className={styles['cardCell']}>
-								<div className={styles['card']}>
-									<div className={styles['cardInner']}>
-										<div className={styles['row']}>
-											<div className={styles['column']+' '+styles['span3']}>
-												<i className={"fas fa-map-marker-alt fa-2x "+styles['mapIcon']}></i>
-											</div>
-											<div>
-												<span>Address Information</span>
-											</div>
-											<div className={styles['cardText']}>
-												<span>Edit addresses for orders</span>
+								<Link to='/accountInfo/addresses'>
+									<div className={styles['card']}>
+										<div className={styles['cardInner']}>
+											<div className={styles['row']}>
+												<div className={styles['column']+' '+styles['span3']}>
+													<i className={"fas fa-map-marker-alt fa-2x "+styles['mapIcon']}></i>
+												</div>
+												<div>
+													<span>Address Information</span>
+												</div>
+												<div className={styles['cardText']}>
+													<span>Edit addresses for orders</span>
+												</div>
 											</div>
 										</div>
 									</div>
-								</div>
+								</Link>
 							</div>
 							<div className={styles['cardCell']}>
-								<div className={styles['card']}>
-									<div className={styles['cardInner']}>
-										<div className={styles['row']}>
-											<div className={styles['column']+' '+styles['span3']}>
-												<i className={"far fa-user-circle fa-2x "+styles['userIcon']}></i>
-											</div>
-											<div>
-												<span>Edit Profile</span>
-											</div>
-											<div className={styles['cardText']}>
-												<span>Edit your user account information</span>
+								<Link to="/accountInfo/editProfile">
+									<div className={styles['card']}>
+										<div className={styles['cardInner']}>
+											<div className={styles['row']}>
+												<div className={styles['column']+' '+styles['span3']}>
+													<i className={"far fa-user-circle fa-2x "+styles['userIcon']}></i>
+												</div>
+												<div>
+													<span>Edit Profile</span>
+												</div>
+												<div className={styles['cardText']}>
+													<span>Edit your user account information</span>
+												</div>
 											</div>
 										</div>
 									</div>
-								</div>
+								</Link>
 							</div>
 							<div className={styles['cardCell']}>
-								<div className={styles['card']}>
-									<div className={styles['cardInner']}>
-										<div className={styles['row']}>
-											<div className={styles['column']+' '+styles['span3']}>
-												<i className={"far fa-credit-card fa-2x "+styles['creditIcon']}></i>
-											</div>
-											<div>
-												<span>Payment Information</span>
-											</div>
-											<div className={styles['cardText']}>
-												<span>Edit credit card information</span>
+								<Link to="/accountInfo/cards">
+									<div className={styles['card']}>
+										<div className={styles['cardInner']}>
+											<div className={styles['row']}>
+												<div className={styles['column']+' '+styles['span3']}>
+													<i className={"far fa-credit-card fa-2x "+styles['creditIcon']}></i>
+												</div>
+												<div>
+													<span>Payment Information</span>
+												</div>
+												<div className={styles['cardText']}>
+													<span>Edit credit card information</span>
+												</div>
 											</div>
 										</div>
 									</div>
-								</div>
+								</Link>
 							</div>
 						</div>
 					</div>
