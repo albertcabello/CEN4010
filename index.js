@@ -49,7 +49,7 @@ function isAuthenticated(req, res, next) {
 		next();
 	}
 	else {
-		res.status(400).send({authError: "Not logged in"});
+		res.redirect('/login');
 	}
 }
 
@@ -368,32 +368,12 @@ app.get('/address', isAuthenticated, (req, res) => {
 
 app.delete('/address', isAuthenticated, (req, res) => {
 	let query = `DELETE FROM userAddresses WHERE userId = ? and addressId = ?`;
-	console.log(req.session.user.id, req.query.id);
 	connection.query(query, [req.session.user.id, req.query.id], (err, results) => {
-		if (err) {
-			res.status(400).send({error: "Error removing the address"});
-		}
-		else {
-			res.status(200).send({success: "Address removed"});
-		}
+		if (err) res.status(400).send({error: "Error removing the address"});
+		else res.status(200).send({success: "Address removed"});
 	});
 });
 
-app.put('/address', isAuthenticated, (req, res) => {
-	let query = `UPDATE addresses SET fullName = ?, firstLine = ?, secondLine = ?, city = ?, state = ?, zip = ?, instr = ?, code = ? WHERE id = ?`;
-	let params = [req.body.fullName, req.body.firstLine, req.body.secondLine, req.body.city, req.body.state, req.body.zip, req.body.instr, req.body.code, req.body.addressId];
-	console.log(query, params);
-	connection.query(query, params, (err, results) => {
-		if (err) {
-			res.status(400).send({error: "Error updating the address"});
-			console.log(err);
-		}
-		else {
-			console.log("Success");
-			res.status(200).send({success: "Address updated"});
-		}
-	});
-});
 
 app.get('/setDefaultAddress/:id', (req, res) => {
 	let query = `UPDATE users SET defaultShipping = ? where id = ?`;
@@ -476,3 +456,55 @@ app.put('/card', isAuthenticated, (req, res) => {
 app.listen(port, () => {
 	console.log('Server is up and listening on' , port)
   }) //This is the port express will listen on
+
+
+
+/************************************
+ *   		Wishlist 			    *
+ ************************************/
+app.delete('/wishlist', isAuthenticated, (req, res) => {
+	let query = `DELETE FROM userWishlists WHERE userId = ${req.session.user.id} and wishlistId = ${req.session.user.id}`;
+	connection.query(query, (err, results) => {
+		if (err) res.status(400).send({error: "Error removing the address"});
+	 else res.status(200).send({success: "Wishlist removed"});
+	});
+});
+
+app.post('/wishlist', isAuthenticated, (req, res) => {
+	let query = `INSERT IGNORE INTO userWishlists (userId, wishlistId) VALUES (${req.session.user.id}, ${req.session.user.id})`;
+
+
+	connection.query(query, (err, results) => {
+		 res.status(200).send({success: "Added wishlist"});
+	});
+});
+app.post('/userwishlist', isAuthenticated, (req, res) => {
+	let query = `INSERT INTO Wishlists (wishlistId, isbn) VALUES (${req.session.user.id}, ?)`;
+	connection.query(query, req.body.isbn, (err, results) => {
+		if (err) res.status(400).send({error: "Couldn't save the wishlist"});
+		else res.status(200).send({success: "Added wishlist"});
+	});
+});
+
+app.delete('/userwishlist', isAuthenticated, (req, res) => {
+	let query = `DELETE FROM Wishlists WHERE wishlistId = ${req.session.user.id} and ISBN = ?`;
+	connection.query(query, req.body.isbn,(err, results) => {
+		if (err) res.status(400).send({error: "Error removing the Wishlist"});
+	 else res.status(200).send({success: "Wishlist removed"});
+	});
+});
+
+app.get('/userwishlist', isAuthenticated, (req,res) => {
+	connection.query(`SELECT ISBN, title FROM Book WHERE ISBN IN (Select ISBN from wishlists where wishlistId = ${req.session.user.id})`, (err,rows, results) => {
+		if (err) res.status(400).send({error: "Error fetching wishlist"});
+	//	else res.status(200).send(results);
+	const booksByAuthor = rows.map((row) => {
+		return {isbn:  row.ISBN,
+				title: row.title
+	};
+});
+
+res.json(booksByAuthor);
+console.log(booksByAuthor);
+	});
+});
