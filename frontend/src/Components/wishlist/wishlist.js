@@ -1,18 +1,18 @@
 import React from 'react';
-import styles from '../wishlist/wishlist.css';
+import styles from '../Addresses/editAddresses.module.css';
 
 import Header from '../Header/header.js';
 import { Redirect, Link } from 'react-router-dom';
 
 
 
-export default class Addresses extends React.Component {
+export default class wishlist extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {loggedIn: undefined, addresses: [], defaultAddressId: -1};
+		this.state = {loggedIn: undefined, wishlist: [], defaultwishlistId: -1};
 
-		this.handleDelete = this.handleDelete.bind(this);
-		this.handleDefault = this.handleDefault.bind(this);
+	//	this.handleDelete = this.handleDelete.bind(this);
+	//	this.handleDefault = this.handleDefault.bind(this);
 	}
 	
 	componentDidMount() {
@@ -26,7 +26,7 @@ export default class Addresses extends React.Component {
 				this.setState(tmpState);
 			}
 			else {
-				tmpState.addresses = json;
+				tmpState.wishlist = json;
 				fetch('http://localhost:3001/isLoggedIn', {credentials: "include"}).then((res2) => {
 					return res2.json();
 				}).then((json2) => {
@@ -37,7 +37,7 @@ export default class Addresses extends React.Component {
 						this.setState(tmpState);
 					}
 					else {
-						tmpState.defaultAddressId = json2.user.defaultShipping;
+						tmpState.defaultwishlistId = json2.user.defaultShipping;
 						tmpState.loggedIn = true;
 						this.setState(tmpState);
 					}
@@ -49,7 +49,7 @@ export default class Addresses extends React.Component {
 	}
 
 	handleDelete(event) {
-		fetch('http://localhost:3001/address/?id=' + event.target.getAttribute('name'), {method: "DELETE", credentials: "include"}).then((res) => {
+		fetch('http://localhost:3001/wishlist/?id=' + event.target.getAttribute('name'), {method: "DELETE", credentials: "include"}).then((res) => {
 			return res.json();
 		}).then((json) => {
 			let tmpState = this.state;
@@ -68,7 +68,7 @@ export default class Addresses extends React.Component {
 
 	handleDefault(event) {
 		let def = event.target.getAttribute('name');
-		fetch('http://localhost:3001/setDefaultAddress/'+def, {credentials: "include"}).then((res) => {
+		fetch('http://localhost:3001/setDefaultwishlist/'+def, {credentials: "include"}).then((res) => {
 			return res.json();
 		}).then((json) => {
 			let tmpState = this.state;
@@ -77,7 +77,7 @@ export default class Addresses extends React.Component {
 				this.setState(tmpState);
 			}
 			else if (json.hasOwnProperty("success")) {
-				tmpState.defaultAddressId = parseInt(def);
+				tmpState.defaultwishlistId = parseInt(def);
 				this.setState(tmpState);
 			}
 			else {
@@ -89,8 +89,8 @@ export default class Addresses extends React.Component {
 
 	render() {
 		console.log(this.state);
-		let groups = this.state.addresses.map( (e, i) => {
-			return i % 3 === 0 ? this.state.addresses.slice(i, i+3) : null;
+		let groups = this.state.wishlist.map( (e, i) => {
+			return i % 3 === 0 ? this.state.wishlist.slice(i, i+3) : null;
 		}).filter((e) => { return e; });
 		
 		let me = this;
@@ -116,15 +116,15 @@ export default class Addresses extends React.Component {
 						<div className={styles['column']}>
 						</div>
 						<div className={styles['column']}>
-							<div className={styles['address']}>
-								{me.state.defaultAddressId === element.isbn ? <div className={styles['defaultSection']}><span>Default Shipping Address</span></div> : null }
-								<div className={styles['addressInformation']}>
+							<div className={styles['wishlist']}>
+								{me.state.defaultwishlistId === element.isbn ? <div className={styles['defaultSection']}><span>Default Shipping wishlist</span></div> : null }
+								<div className={styles['wishlistInformation']}>
 									<span style={{fontSize: '17px' ,fontWeight: 'bold' }}>{element.fullName}</span>
 									<br/>Title: {element.title}<br/>ISBN: {element.isbn}<br/>
 								</div>
 								<div className={styles['editing']}> 
 									<span> 
-									<Link to={{pathname:'/book/'+element.isbn, state: {editing: true, user: element}}}> <span className={styles['link']}>Go To</span></Link> 
+									<Link to={{pathname:'/book/'+element.isbn}}> <span className={styles['link']}>Go To</span></Link> 
 									|<span name={element.isbn} className={styles['link']} onClick={this.handleDelete}>Delete</span>|
 									</span>
 								</div>
@@ -136,15 +136,15 @@ export default class Addresses extends React.Component {
 				else {
 					return (
 						<div className={styles['column']}>
-							<div className={styles['address']}>
-							{me.state.defaultAddressId === element.isbn ? <div className={styles['defaultSection']}><span>Default Shipping Address</span></div> : null }
-								<div className={styles['addressInformation']}>
+							<div className={styles['wishlist']}>
+							{me.state.defaultwishlistId === element.isbn ? <div className={styles['defaultSection']}><span>Default Shipping wishlist</span></div> : null }
+								<div className={styles['wishlistInformation']}>
 									<span style={{fontSize: '17px' ,fontWeight: 'bold' }}>{element.fullName}</span>
 									<br/>Title: {element.title}<br/>ISBN: {element.isbn}<br/>
 								</div>
 								<div className={styles['editing']}> 
 									<span> 
-									<Link to={{pathname:'/book/'+element.isbn, state: {editing: true, user: element}}}> <span className={styles['link']}>Go To</span></Link> 
+									<Link to={{pathname:'/book/'+element.isbn}}> <span className={styles['link']}>Go To</span></Link> 
 									|<span name={element.isbn} className={styles['link']} onClick={this.handleDelete}>Delete</span>|
 									</span>
 								</div>
