@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../wishlist/wishlist.css';
+import styles from '../Addresses/editAddresses.module.css';
 
 import Header from '../Header/header.js';
 import { Redirect, Link } from 'react-router-dom';
@@ -11,8 +11,8 @@ export default class wishlist extends React.Component {
 		super(props);
 		this.state = {loggedIn: undefined, wishlist: [], defaultwishlistId: -1};
 
-		this.handleDelete = this.handleDelete.bind(this);
-		this.handleDefault = this.handleDefault.bind(this);
+	//	this.handleDelete = this.handleDelete.bind(this);
+	//	this.handleDefault = this.handleDefault.bind(this);
 	}
 	
 	componentDidMount() {

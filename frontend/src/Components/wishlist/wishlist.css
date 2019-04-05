@@ -524,4 +524,11 @@ body {
   .creditIcon {
     color: #52cc1e;
   }
-  
+  .textbox {
+    margin-top: 5px;
+    height: 31px;
+    border-radius: 3px;
+    border: 1px solid #a6a6a6;
+    font-size: 13px;
+    width: 100%;
+  }
