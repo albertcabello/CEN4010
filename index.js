@@ -49,7 +49,7 @@ function isAuthenticated(req, res, next) {
 		next();
 	}
 	else {
-		res.status(400).send({authError: "Not logged in"});
+		res.redirect('/login');
 	}
 }
 
@@ -225,6 +225,7 @@ app.put('/update/', isAuthenticated, async (req, res) => {
 			query = query + `, ${changes[i]} = ?`; //Notice that this is different with a comma
 		}
 		if (changes[i] === 'password') {
+			console.log("NEW PASSWORD", changes[i]);
 			//This wraps the hashing function into a promise so that we can await it before continuing the loop
 			let hashedPassword = await new Promise((resolve, reject) => {
 				bcrypt.hash(req.body[changes[i]], 10, (err, hash) => {
@@ -242,14 +243,19 @@ app.put('/update/', isAuthenticated, async (req, res) => {
 	console.log(query, vals);
 	//</query building stage>
 	connection.query(query, vals, (err, results) => {
-		if (err) res.status(400).send({error: "Error updating the user object, please try again"});
-		query = `SELECT * FROM users WHERE id = ${req.session.user.id}`;
-		connection.query(query, (err, results) => {
-			if (err) res.status(400).send({error: "Error getting user object back"});
-			req.session.user = results[0];
-			delete req.session.user.password;
-			res.status(200).send({success: "User updated", user: results[0]});
-		});
+		if (err) {
+			res.status(400).send({error: "Error updating the user object, please try again"});
+			console.log(err);
+		}
+		else {
+			query = `SELECT * FROM users WHERE id = ${req.session.user.id}`;
+			connection.query(query, (err, results) => {
+				if (err) res.status(400).send({error: "Error getting user object back"});
+				req.session.user = results[0];
+				delete req.session.user.password;
+				res.status(200).send({success: "User updated", user: results[0]});
+			});
+		}
 	});
 });
 
@@ -362,42 +368,23 @@ app.get('/address', isAuthenticated, (req, res) => {
 
 app.delete('/address', isAuthenticated, (req, res) => {
 	let query = `DELETE FROM userAddresses WHERE userId = ? and addressId = ?`;
-	console.log(req.session.user.id, req.query.id);
 	connection.query(query, [req.session.user.id, req.query.id], (err, results) => {
-		if (err) {
-			res.status(400).send({error: "Error removing the address"});
-		}
-		else {
-			res.status(200).send({success: "Address removed"});
-		}
+		if (err) res.status(400).send({error: "Error removing the address"});
+		else res.status(200).send({success: "Address removed"});
 	});
 });
 
-app.put('/address', isAuthenticated, (req, res) => {
-	let query = `UPDATE addresses SET fullName = ?, firstLine = ?, secondLine = ?, city = ?, state = ?, zip = ?, instr = ?, code = ? WHERE id = ?`;
-	let params = [req.body.fullName, req.body.firstLine, req.body.secondLine, req.body.city, req.body.state, req.body.zip, req.body.instr, req.body.code, req.body.addressId];
-	console.log(query, params);
-	connection.query(query, params, (err, results) => {
-		if (err) {
-			res.status(400).send({error: "Error updating the address"});
-			console.log(err);
-		}
-		else {
-			console.log("Success");
-			res.status(200).send({success: "Address updated"});
-		}
-	});
-});
 
 app.get('/setDefaultAddress/:id', (req, res) => {
 	let query = `UPDATE users SET defaultShipping = ? where id = ?`;
-	let params = [req.params.id, req.session.user.id];
+	let params = [parseInt(req.params.id), req.session.user.id];
 	console.log(query, params);
 	connection.query(query, params, (err, results) => {
 		if (err) {
 			res.status(400).send({error: "Error updating the default password"});
 		}
 		else {
+			req.session.user.defaultShipping = parseInt(req.params.id);
 			res.status(200).send({success: "Default updated"});
 		}
 	});
@@ -426,10 +413,10 @@ function checkCard(cardNumber) {
 }
 
 app.post('/card', isAuthenticated, (req, res) => {
-	//if (!checkCard(req.body.cardNumber)) {
-	//	res.status(400).send({error: "Credit card number is not valid"});
-	//	return;
-	//}
+	if (!checkCard(req.body.cardNumber)) {
+		res.status(400).send({error: "Credit card number is not valid"});
+		return;
+	}
 	let query = `INSERT INTO cards (userId, cardNumber) VALUES (${req.session.user.id}, ?)`;
 	connection.query(query, req.body.cardNumber, (err, results) => {
 		if (err) res.status(400).send({error: "Couldn't save the credit card"});
@@ -449,6 +436,21 @@ app.delete('/card', isAuthenticated, (req, res) => {
 		if (err) res.status(400).send({error: "Error deleting card"});
 		else res.status(200).send({success: "Card removed"});
 	});
+});
+
+app.put('/card', isAuthenticated, (req, res) => {
+	let query = `UPDATE cards SET cardNumber = ? WHERE userId = ? and id = ?`;
+	let params = [req.body.cardNumber, req.session.user.id, req.body.cardId];
+	if (!checkCard(req.body.cardNumber)) {
+		res.status(400).send({error: "Credit card number is not valid"});
+	}
+	else {
+		console.log(query, params);
+		connection.query(query, params, (err, results) => {
+			if (err) res.status(400).send({error: "Error updating card"});
+			else res.status(200).send({success: "Card updated"});
+		});
+	}
 });
 
 app.listen(port, () => {
@@ -473,7 +475,6 @@ app.post('/wishlist', isAuthenticated, (req, res) => {
 
 
 	connection.query(query, (err, results) => {
-	//	if (err) res.status(400).send({error: "Couldn't save the wishlist"});
 		 res.status(200).send({success: "Added wishlist"});
 	});
 });
@@ -487,9 +488,23 @@ app.post('/userwishlist', isAuthenticated, (req, res) => {
 
 app.delete('/userwishlist', isAuthenticated, (req, res) => {
 	let query = `DELETE FROM Wishlists WHERE wishlistId = ${req.session.user.id} and ISBN = ?`;
-	connection.query(query, (err, results) => {
+	connection.query(query, req.body.isbn,(err, results) => {
 		if (err) res.status(400).send({error: "Error removing the Wishlist"});
 	 else res.status(200).send({success: "Wishlist removed"});
 	});
 });
 
+app.get('/userwishlist', isAuthenticated, (req,res) => {
+	connection.query(`SELECT ISBN, title FROM Book WHERE ISBN IN (Select ISBN from wishlists where wishlistId = ${req.session.user.id})`, (err,rows, results) => {
+		if (err) res.status(400).send({error: "Error fetching wishlist"});
+	//	else res.status(200).send(results);
+	const booksByAuthor = rows.map((row) => {
+		return {isbn:  row.ISBN,
+				title: row.title
+	};
+});
+
+res.json(booksByAuthor);
+console.log(booksByAuthor);
+	});
+});

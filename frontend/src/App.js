@@ -12,6 +12,9 @@ import wishlist from "./Components/wishlist/wishlist";
 import AccountInfo from "./Components/AccountInfo/accountInfo.js";
 import Addresses from "./Components/Addresses/addresses.js";
 import EditAddresses from "./Components/Addresses/editAddresses.js";
+import Cards from "./Components/Cards/cards.js";
+import EditCards from "./Components/Cards/editCards.js";
+import EditProfile from "./Components/EditProfile/editProfile.js";
 
 class App extends React.Component {
   render() {
@@ -30,6 +33,9 @@ class App extends React.Component {
 	    <Route exact path="/accountInfo" component = {AccountInfo} />
 	    <Route exact path="/accountInfo/addresses" component = {Addresses} />
 	    <Route exact path="/accountInfo/addresses/edit" component = {EditAddresses} />
+	    <Route exact path="/accountInfo/cards" component = {Cards} />
+	    <Route exact path="/accountInfo/cards/edit" component = {EditCards} />
+	    <Route exact path="/accountInfo/editProfile" component = {EditProfile} />
           </div>
 	</BrowserRouter>
       </div>

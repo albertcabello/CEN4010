@@ -11,7 +11,7 @@ export default class EditAddresses extends React.Component {
 		const s = this.props.location.state;
 		if (s !== undefined) {
 			if (s.editing) {
-				this.state = {loggedIn: undefined, finished: false, user: s.user};
+				this.state = {loggedIn: undefined, finished: false, user: s.user, editing: s.editing};
 			}
 			else {
 				this.state = {loggedIn: undefined,
@@ -25,13 +25,14 @@ export default class EditAddresses extends React.Component {
 						zip: '',
 						instr: '',
 						code: '',
-					     }
+					     },
+					     editing: false
 					    };
 			}
 		}
 		else {
 			if (s.editing) {
-				this.state = {loggedIn: undefined, finished: true};
+				this.state = {loggedIn: undefined, finished: true, editing: s.editing};
 			}
 			else {
 				this.state = {loggedIn: undefined,
@@ -45,7 +46,8 @@ export default class EditAddresses extends React.Component {
 						zip: '',
 						instr: '',
 						code: '',
-					     }
+					     },
+					     editing: false
 					    };
 			}
 				
@@ -93,7 +95,7 @@ export default class EditAddresses extends React.Component {
 			return res.json();
 		}).then((json) => {
 			if (json.hasOwnProperty("error")) {
-				alert("There was an error on the server, please try again later");
+				alert("There was an error on the server, please try again later " + json.error);
 				let tmpState = this.state;
 				tmpState.finsihed = true;
 				this.setState(tmpState);
@@ -108,6 +110,7 @@ export default class EditAddresses extends React.Component {
 	}
 
 	render() {
+		console.log(this.state.editing);
 		let states = [ 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MH', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY' ];
 		if (this.state.finished) {
 			return (

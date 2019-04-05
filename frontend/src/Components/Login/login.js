@@ -117,7 +117,7 @@ export default class Login extends React.Component {
 
 	render() {
 		if (this.state.redirectHome) {
-			return <Redirect to="/author/William/Shakespeare"/>
+			return <Redirect to="/accountInfo"/>
 		}
 		if (this.state.registering) {
 			return (
