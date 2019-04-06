@@ -74,16 +74,13 @@ class Header extends React.Component {
 			<li><a href="#">Biography & Memoir</a></li>
 		</ul>
 		</li>
-		<li class= "menu-item"><a href="">Store<i class="fas fa-angle-down expand"></i></a>
+		<li class= "menu-item"><Link to={this.state.loggedIn ? "/accountInfo" : "/login"}>My Account<i class="fas fa-angle-down expand"></i></Link>
 		<ul class="dropdown">
 			<li class="dropdown-item"><a href="">Cart</a></li>
 			<li class="dropdown-item">
 				<Link to={this.state.loggedIn ? "/Wishlist" : "/login"}>Wishlist</Link>
 			</li>		  
 			<li class="dropdown-item"><a href="">Checkout</a></li>
-			<li class="dropdown-item">
-				<Link to={this.state.loggedIn ? "/accountInfo" : "/login"}>My Account</Link>
-			</li>
 			<li class="dropdown-item"><a href="#" onClick={this.handleLogout}>Logout</a></li>
 		</ul>
 		</li>

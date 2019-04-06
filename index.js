@@ -115,6 +115,30 @@ app.get('/author/:authorFirst/:authorLast', (req, res) => {
 	});
 });
 
+app.get('/:genre', (req, res) => {
+	const genre = req.params.genre;
+	console.log("Fetching genre info: " + genre);
+	const queryString = "SELECT * FROM Book WHERE genre = ?";
+	connection.query(queryString, [genre], (err, rows, fields) => {
+		if (err) {
+			console.log("Failed to query for author: " + err);
+			res.sendStatus(500);
+			return;
+			// throw err
+		  }
+  
+		const booksByGenre = rows.map((row) => {
+			return {title: row.title,
+					cover: row.cover,
+					price: row.price,					
+			};
+		});
+  
+		res.json(booksByGenre);
+		console.log(booksByGenre);
+	});
+});
+
 /************************************
  *       Profile Management         *
  ************************************/

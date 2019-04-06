@@ -18,6 +18,7 @@ body {
 .logo{
   position: relative;
   max-width: 159px;
+  padding-top: 10px;
 }
 
 .main-header.right{

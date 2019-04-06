@@ -6,9 +6,13 @@
     "bcrypt": "^3.0.5",
     "npm-run-all": "^4.1.5",
     "react": "^16.8.5",
+    "react-coverflow": "^0.2.19",
     "react-dom": "^16.8.5",
+    "react-items-carousel": "^2.3.2",
+    "react-responsive-carousel": "^3.1.47",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.8"
+    "react-scripts": "2.1.8",
+    "react-slick": "^0.23.2"
   },
   "scripts": {
     "start": "react-scripts start",
