@@ -42,6 +42,21 @@ class Description extends React.Component {
 		})
 
 		};
+		handleWishlistDelete(event) {
+			var url = window.location.pathname;
+			var file = url.substring(url.lastIndexOf('/')+1);
+			alert(file);
+			let body = {
+				isbn: file
+			};
+			
+	
+	
+			fetch('http://localhost:3001/userWishlist', {method: "Delete", credentials: "include", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)}).then((response) => {	
+			return response.json();
+			})
+	
+			};
 	
 
   render() {
@@ -69,6 +84,7 @@ class Description extends React.Component {
         </p>
 	<p>{this.props.description}</p>	
         <button type="submit" name="add-to-cart" value="892" class="add-to-cart-button">Add to cart</button>
+
 	<button class="wishlist" onClick={this.handleWishlist}>
   		<i class="fas fa-heart heart"></i>
   		<span>Add to wishlist </span>
@@ -77,6 +93,8 @@ class Description extends React.Component {
 						</script>
 
 	</button>
+	<button type="submit" name="delete-from-wishlist" value="892" class="add-to-cart-button" onClick={this.handleWishlistDelete}>Delete From Wishlist</button>
+
 	</div>
       </div>
     );
