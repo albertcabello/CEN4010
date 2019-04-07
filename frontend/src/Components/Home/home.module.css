@@ -1,6 +1,8 @@
-.home-sidebar-wrapper{
-    line-height: 1.8;
-    border-right:1px solid #DCDCDC;
+.banner{
+    margin-left: 50px;
+    margin-top: 10px;
+    width: 1190px; 
+    height: 350px;
 }
 
 .carousel-item{
@@ -10,9 +12,20 @@
 
 .carousel{
     background-color: white;
+    display: inline-block;
     max-width: 500px;
-    margin-left: 60px;
-    margin-top: 250px;
+    margin-left: 110px;
+    margin-bottom: 50px;
+    margin-top: 20px;
+}
+
+.carousel-right{
+    background-color: white;
+    display: inline-block;
+    max-width: 500px;
+    margin-bottom: 50px;
+    margin-top: 20px;
+    margin-left: 100px;
 }
 
 .book-name{

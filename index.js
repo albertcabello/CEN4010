@@ -128,9 +128,8 @@ app.get('/:genre', (req, res) => {
 		  }
   
 		const booksByGenre = rows.map((row) => {
-			return {title: row.title,
-					cover: row.cover,
-					price: row.price,					
+			return {cover: row.cover,
+					isbn: row.ISBN,					
 			};
 		});
   

@@ -1,13 +1,12 @@
 body {
   font-family: PT Serif Caption;
-
  }
 
 /* Header */
 .header{
   width: 100%;
-  padding-top: 25px;
-  padding-bottom: 25px;
+  padding-top: 15px;
+  padding-bottom: 15px;
   margin: auto;
   max-width: 1200px !important;
   border-bottom-style: solid;
@@ -73,11 +72,26 @@ a:hover{
 }
 
 .search-container {
+  float: 'left';
+  padding-right: 10px;
+}
 
+.search-item{
+  position: relative;
+  display: inline-block;
+}
+
+.search-container input{
+  float: 'left';
+  width: 650px;
+  height: 30px;
+  border: 1px solid #D3D3D3;
+  font-family: PT Serif Caption;
+  font-style: italic;
 }
 
 .search{
-	width: 10px;
+  width: 10px;
 }
 
  /* Book description */
