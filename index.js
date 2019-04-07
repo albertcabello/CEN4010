@@ -481,6 +481,96 @@ app.listen(port, () => {
   }) //This is the port express will listen on
 
 
+/////////////// add review //////////////////////////////////
+
+let flag_1 = false;
+
+function dataInsert(req,res)
+{
+	
+  const INSERT_USER_QUERY = "INSERT INTO Review(ReviewID, User, StarCounter,Comments) VALUES(?,?,?,?)";
+  connection.query(INSERT_USER_QUERY,[req.body["isbn"],req.body["user"],req.body["starcount"],req.body["comments"]], (err, resultados) => {
+		  if(err) {
+			  return res.status(200).send(err)
+		  } else {
+				  
+			  return res.status(200).send('Review register success!')
+		  }
+  
+  });
+  
+}
+
+function dataUpdate(req,res)
+{
+
+  connection.query("SELECT ReviewID,User FROM Review",(err,rows)=>{
+
+	  if(err) {
+		  return res.status(200).send(err)
+	  } 
+	  else {
+
+		  Object.keys(rows).forEach(function(key) {
+				  var row = rows[key];
+				  var userName=row.User.toLowerCase();
+				  var userName_new=req.body["user"].toLowerCase();
+				  if(row.ReviewID===req.body["isbn"] && userName===userName_new)
+				  {
+					  connection.query("UPDATE Review SET StarCounter=?,Comments=? WHERE ReviewID=? and User=?",[req.body["starcount"],req.body["comments"],req.body["isbn"],req.body["user"]]); 
+					  flag_1=true;
+					  return;
+				  }	
+				  if(flag_1===true)
+					  return;			
+			  });
+			  if(flag_1===true)
+			  {
+				  flag_1=false;
+				  return res.send('Review Update success!')
+			  } 
+			  dataInsert(req,res);
+	  
+	  }
+  });
+
+}
+
+app.post("/review/put", (req, res) => {
+
+  dataUpdate(req,res);	
+
+});
+
+app.post("/review/get", (req, res) => {
+
+   connection.query("SELECT * FROM Review",(err,rows)=>{
+
+	  if(err) {
+		  return res.send(err)
+	  } 
+	  else {
+			const reviewData = rows.map((row) => {
+				if(row.ReviewID===req.body["isbn"] )
+				{
+					return {
+							isbn:  row.ReviewID,
+							user: row.User,
+							star: row.StarCounter,
+							comment: row.Comments					
+						};
+				}
+			});
+	  
+			res.json(reviewData);		  
+			  
+	  }
+  });
+
+});
+app.listen(port, () => {
+	console.log('Server is up and listening on' , port)
+  }) //This is the port express will listen on
 
 /************************************
  *   		Wishlist 			    *
