@@ -568,9 +568,7 @@ app.post("/review/get", (req, res) => {
   });
 
 });
-app.listen(port, () => {
-	console.log('Server is up and listening on' , port)
-  }) //This is the port express will listen on
+
 
 /************************************
  *   		Wishlist 			    *
