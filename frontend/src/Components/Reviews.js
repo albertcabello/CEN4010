@@ -1,22 +1,69 @@
 import React from "react";
+const API = "http://localhost:3001/review/";
 
 class Reviews extends React.Component {
 
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			star:0,
+			first:"",
+			last: "",
+			comment: ""
+			
+		}
+		
+	}
+	componentWillMount(){
+		var opts={
+			isbn: this.props.isbn,
+			first:this.props.first, 
+			last: this.props.last };
+			
+		var apiCall = fetch(API + "get",{method: 'post', credentials: "include", headers: {"Content-Type": "application/json"}, body: JSON.stringify(opts)});
+	
+		apiCall.then(response => {
+				
+			return response.text();
+		}).then(result => {
+			
+			const obj=JSON.parse(result);
+			var star=0;
+			var first="";
+			var last="";
+			var comment="";
+			
+			if(obj[0])
+			{
+
+				star=obj[0].star;
+				first=obj[0].first;
+				last=obj[0].last;
+			  comment=obj[0].comment;
+			}	
+		
+								
+			this.setState({
+						star: star,first: first,last: last,comment: comment
+					})
+		});
+	}
   render() {
+			
+			const items=[];
+				
+			for(let j=0; j < 5 ; j++)
+				items.push(<span className={"fas fa-star"+ (j < this.state.star ? " checked" : "")} ></span>); 
+		
     return (
-      <div class= "reviews">
-	<h4>COMMUNITY REVIEWS</h4>
-	<p>2 reviews</p>
-        <div class= "user-review">
-	<a href="#">Ariel</a> rated it 5
-	<p>It is always so satisfying to read a book you've heard so much about throughout your life. You should have seen how excited I 		got when Juliet started saying "Romeo, o Romeo"!</p>
-	<p>2 comments<i class="fas fa-angle-down"></i></p>
-	</div>
-        <div class= "user-review">
-	<a href="#">Aishu Reh</a> rated it 3
-	<p>Being one of the most famous plays through all time, Romeo and Juliet still captivates readers and audiences around the world. This is a fine example of the fact that time doesn't really have to change us. We can still understand and identify with great stories from a long time ago. Romeo and Juliet is a play that centers around forbiddem love between two young, rebellious people. But the play is much more than that.</p>
-	<p>0 comments<i class="fas fa-angle-down"></i></p>
-	</div>
+      <div class= "tabs">
+				<h4>COMMUNITY REVIEWS</h4>
+				<a className="p-5" href="#">&nbsp; {this.state.first} {this.state.last}'s review</a>
+				<div className= "rating" >
+					{items}
+				</div>
+				<p className="comment">{this.state.comment}</p>	
       </div>
     );
   }
