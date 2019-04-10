@@ -5,20 +5,30 @@ let bodyParser = require('body-parser');
 let cors = require('cors');
 let connection = require('./sql.js').connection;
 let config = require('./config.js');
+const morgan = require('morgan');
 
 let app = express();
+app.use(morgan('short'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+const port = process.env.PORT || 3001
 
 /************************************
  *           Middlewares            *
  ************************************/
-app.use(cors());
+let corsOptions = {
+	origin: 'http://localhost:3000',
+	credentials: true
+}
+app.use(cors(corsOptions));
 app.use(session({
 	secret: config.session.secret,
 	cookie: {
 		maxAge: config.session.maxAge,
 	},
 	saveUninitialized: false,
-	resave: false
+	resave: false,
 }));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -43,6 +53,90 @@ function isAuthenticated(req, res, next) {
 	}
 }
 
+/************************************
+ *          Book Details            *
+ ************************************/
+app.get('/book/:isbn', (req, res) => {
+	console.log("Fetching book with isbn: " + req.params.isbn);
+	const ISBN = req.params.isbn;
+	const queryString =  "SELECT * FROM Book JOIN Description ON ISBN = descriptionID JOIN Author ON authorID = ID WHERE ISBN = ?";
+
+	connection.query(queryString, [ISBN], (err, rows, fields) => {
+		if (err) {
+		  console.log("Failed to query for book: " + err);
+		  res.sendStatus(500);
+		  return
+		  // throw err
+		}
+
+		const books = rows.map((row) => {
+			return {title: row.title,
+				authorFirst: row.authorFirst,
+				authorLast: row.authorLast,
+				cover: row.cover,
+				genre: row.genre,
+				publisher: row.publisher,
+				avgRating: row.avgRating,
+				description: row.Description,
+				biography: row.bio,
+				price: row.price
+			};
+		});
+
+		res.json(books);
+		console.log(books);
+	});
+});
+  
+app.get('/author/:authorFirst/:authorLast', (req, res) => {
+	const firstName = req.params.authorFirst;
+	const lastName = req.params.authorLast;
+	console.log("Fetching author info: " + firstName + " " + lastName);
+	const queryString = "SELECT * FROM Book JOIN Author ON authorID = ID WHERE authorID IN (SELECT ID FROM Author WHERE authorLast = ? AND authorFirst = ?)";
+	connection.query(queryString, [lastName, firstName], (err, rows, fields) => {
+		if (err) {
+			console.log("Failed to query for author: " + err);
+			res.sendStatus(500);
+			return;
+			// throw err
+		  }
+  
+		const booksByAuthor = rows.map((row) => {
+			return {isbn:  row.ISBN,
+					title: row.title,
+					cover: row.cover,
+					price: row.price,
+					biography: row.bio
+			};
+		});
+  
+		res.json(booksByAuthor);
+		console.log(booksByAuthor);
+	});
+});
+
+app.get('/:genre', (req, res) => {
+	const genre = req.params.genre;
+	console.log("Fetching genre info: " + genre);
+	const queryString = "SELECT * FROM Book WHERE genre = ?";
+	connection.query(queryString, [genre], (err, rows, fields) => {
+		if (err) {
+			console.log("Failed to query for author: " + err);
+			res.sendStatus(500);
+			return;
+			// throw err
+		  }
+  
+		const booksByGenre = rows.map((row) => {
+			return {cover: row.cover,
+					isbn: row.ISBN,					
+			};
+		});
+  
+		res.json(booksByGenre);
+		console.log(booksByGenre);
+	});
+});
 
 /************************************
  *       Profile Management         *
@@ -77,6 +171,15 @@ app.get('/ping', (req, res) => {
 
 app.get('/login', (req, res) => {
 	res.send("This will eventually be a login page");
+});
+
+app.get('/isLoggedIn', (req, res) => {
+	if (req.session.user) {
+		res.send({user: req.session.user});
+	}
+	else {
+		res.send({error: false});
+	}
 });
 
 //Starts a session 
@@ -145,6 +248,7 @@ app.put('/update/', isAuthenticated, async (req, res) => {
 			query = query + `, ${changes[i]} = ?`; //Notice that this is different with a comma
 		}
 		if (changes[i] === 'password') {
+			console.log("NEW PASSWORD", changes[i]);
 			//This wraps the hashing function into a promise so that we can await it before continuing the loop
 			let hashedPassword = await new Promise((resolve, reject) => {
 				bcrypt.hash(req.body[changes[i]], 10, (err, hash) => {
@@ -162,14 +266,19 @@ app.put('/update/', isAuthenticated, async (req, res) => {
 	console.log(query, vals);
 	//</query building stage>
 	connection.query(query, vals, (err, results) => {
-		if (err) res.status(400).send({error: "Error updating the user object, please try again"});
-		query = `SELECT * FROM users WHERE id = ${req.session.user.id}`;
-		connection.query(query, (err, results) => {
-			if (err) res.status(400).send({error: "Error getting user object back"});
-			req.session.user = results[0];
-			delete req.session.user.password;
-			res.status(200).send({success: "User updated", user: results[0]});
-		});
+		if (err) {
+			res.status(400).send({error: "Error updating the user object, please try again"});
+			console.log(err);
+		}
+		else {
+			query = `SELECT * FROM users WHERE id = ${req.session.user.id}`;
+			connection.query(query, (err, results) => {
+				if (err) res.status(400).send({error: "Error getting user object back"});
+				req.session.user = results[0];
+				delete req.session.user.password;
+				res.status(200).send({success: "User updated", user: results[0]});
+			});
+		}
 	});
 });
 
@@ -288,6 +397,21 @@ app.delete('/address', isAuthenticated, (req, res) => {
 	});
 });
 
+
+app.get('/setDefaultAddress/:id', (req, res) => {
+	let query = `UPDATE users SET defaultShipping = ? where id = ?`;
+	let params = [parseInt(req.params.id), req.session.user.id];
+	console.log(query, params);
+	connection.query(query, params, (err, results) => {
+		if (err) {
+			res.status(400).send({error: "Error updating the default password"});
+		}
+		else {
+			req.session.user.defaultShipping = parseInt(req.params.id);
+			res.status(200).send({success: "Default updated"});
+		}
+	});
+});
 /************************************
  *    User Credit Card Management   *
  ************************************/
@@ -337,4 +461,175 @@ app.delete('/card', isAuthenticated, (req, res) => {
 	});
 });
 
-app.listen(8000); //This is the port express will listen on
+app.put('/card', isAuthenticated, (req, res) => {
+	let query = `UPDATE cards SET cardNumber = ? WHERE userId = ? and id = ?`;
+	let params = [req.body.cardNumber, req.session.user.id, req.body.cardId];
+	if (!checkCard(req.body.cardNumber)) {
+		res.status(400).send({error: "Credit card number is not valid"});
+	}
+	else {
+		console.log(query, params);
+		connection.query(query, params, (err, results) => {
+			if (err) res.status(400).send({error: "Error updating card"});
+			else res.status(200).send({success: "Card updated"});
+		});
+	}
+});
+
+app.listen(port, () => {
+	console.log('Server is up and listening on' , port)
+  }) //This is the port express will listen on
+
+
+/************************************
+ *    User Add Review and Comments   *
+ ************************************/
+
+let flag_1 = false;
+
+function dataInsert(req,res)
+{
+	
+  const INSERT_USER_QUERY = "INSERT INTO Review(ReviewID, UserFirstName,UserLastName, StarCounter,Comments) VALUES(?,?,?,?,?)";
+  connection.query(INSERT_USER_QUERY,[req.body["isbn"],req.body["first"],req.body["last"],req.body["starcount"],req.body["comments"]], (err, resultados) => {
+		  if(err) {
+			  return res.status(200).send(err)
+		  } else {
+				  
+			  return res.status(200).send('Review register success!')
+		  }
+  
+  });
+  
+}
+
+function dataUpdate(req,res)
+{
+
+  connection.query("SELECT ReviewID,UserFirstName,UserLastName FROM Review",(err,rows)=>{
+
+	  if(err) {
+		  return res.status(200).send(err)
+	  } 
+	  else {
+
+		  Object.keys(rows).forEach(function(key) {
+				  var row = rows[key];
+				  var first=row.UserFirstName.toLowerCase();
+				  var first_req=req.body["first"].toLowerCase();
+
+				  var last=row.UserLastName.toLowerCase();
+				  var last_req=req.body["last"].toLowerCase();
+
+				  if((row.ReviewID===req.body["isbn"]) && (first===first_req) && (last===last_req))
+				  {
+					  connection.query("UPDATE Review SET StarCounter=?,Comments=? WHERE ReviewID=? and UserFirstName=? and UserLastName=?",[req.body["starcount"],req.body["comments"],req.body["isbn"],req.body["first"],req.body["last"]]); 
+					  flag_1=true;
+					  return;
+				  }	
+				  if(flag_1===true)
+					  return;			
+			  });
+			  if(flag_1===true)
+			  {
+				  flag_1=false;
+				  return res.send('Review Update success!')
+			  } 
+			  dataInsert(req,res);
+	  
+	  }
+  });
+
+}
+
+app.post("/review/put", (req, res) => {
+
+  dataUpdate(req,res);	
+
+});
+
+app.post("/review/get", (req, res) => {
+
+   connection.query("SELECT * FROM Review",(err,rows)=>{
+
+	  if(err) {
+		  return res.send(err)
+	  } 
+	  else {
+		    
+			const reviewData = rows.map((row) => {
+				var first=row.UserFirstName.toLowerCase();
+				var first_req=req.body["first"].toLowerCase();
+
+				var last=row.UserLastName.toLowerCase();
+				var last_req=req.body["last"].toLowerCase();
+
+				if((row.ReviewID===req.body["isbn"]) && (first===first_req) && (last===last_req))
+				{
+					return {
+							isbn:  row.ReviewID,
+							first: row.UserFirstName,
+							last: row.UserLastName,
+							star: row.StarCounter,
+							comment: row.Comments					
+						};
+				}
+			});
+	  
+			res.json(reviewData);		  
+			  
+	  }
+  });
+
+});
+
+
+/************************************
+ *   		Wishlist 			    *
+ ************************************/
+app.delete('/wishlist', isAuthenticated, (req, res) => {
+	let query = `DELETE FROM userWishlists WHERE userId = ${req.session.user.id} and wishlistId = ${req.session.user.id}`;
+	connection.query(query, (err, results) => {
+		if (err) res.status(400).send({error: "Error removing the address"});
+	 else res.status(200).send({success: "Wishlist removed"});
+	});
+});
+
+app.post('/wishlist', isAuthenticated, (req, res) => {
+	let query = `INSERT IGNORE INTO userWishlists (userId, wishlistId) VALUES (${req.session.user.id}, ${req.session.user.id})`;
+
+
+	connection.query(query, (err, results) => {
+		 res.status(200).send({success: "Added wishlist"});
+	});
+});
+app.post('/userwishlist', isAuthenticated, (req, res) => {
+	let query = `INSERT INTO Wishlists (wishlistId, isbn) VALUES (${req.session.user.id}, ?)`;
+	connection.query(query, req.body.isbn, (err, results) => {
+		if (err) res.status(400).send({error: "Couldn't save the wishlist"});
+		else res.status(200).send({success: "Added wishlist"});
+	});
+});
+
+app.delete('/userwishlist', isAuthenticated, (req, res) => {
+	let query = `DELETE FROM Wishlists WHERE wishlistId = ${req.session.user.id} and ISBN = ?`;
+	connection.query(query, req.body.isbn,(err, results) => {
+		if (err) res.status(400).send({error: "Error removing the Wishlist"});
+	 else res.status(200).send({success: "Wishlist removed"});
+	});
+});
+
+app.get('/userwishlist', isAuthenticated, (req,res) => {
+	connection.query(`SELECT ISBN, title FROM Book WHERE ISBN IN (Select ISBN from wishlists where wishlistId = ${req.session.user.id})`, (err,rows, results) => {
+		if (err) res.status(400).send({error: "Error fetching wishlist"});
+	//	else res.status(200).send(results);
+	const booksByAuthor = rows.map((row) => {
+		return {isbn:  row.ISBN,
+				title: row.title
+	};
+});
+
+res.json(booksByAuthor);
+console.log(booksByAuthor);
+	});
+});
