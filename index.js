@@ -115,7 +115,7 @@ app.get('/author/:authorFirst/:authorLast', (req, res) => {
 	});
 });
 
-app.get('/genre/:genre', (req, res) => {
+app.get('/:genre', (req, res) => {
 	const genre = req.params.genre;
 	console.log("Fetching genre info: " + genre);
 	const queryString = "SELECT * FROM Book WHERE genre = ?";
@@ -481,15 +481,17 @@ app.listen(port, () => {
   }) //This is the port express will listen on
 
 
-/////////////// add review //////////////////////////////////
+/************************************
+ *    User Add Review and Comments   *
+ ************************************/
 
 let flag_1 = false;
 
 function dataInsert(req,res)
 {
 	
-  const INSERT_USER_QUERY = "INSERT INTO Review(ReviewID, User, StarCounter,Comments) VALUES(?,?,?,?)";
-  connection.query(INSERT_USER_QUERY,[req.body["isbn"],req.body["user"],req.body["starcount"],req.body["comments"]], (err, resultados) => {
+  const INSERT_USER_QUERY = "INSERT INTO Review(ReviewID, UserFirstName,UserLastName, StarCounter,Comments) VALUES(?,?,?,?,?)";
+  connection.query(INSERT_USER_QUERY,[req.body["isbn"],req.body["first"],req.body["last"],req.body["starcount"],req.body["comments"]], (err, resultados) => {
 		  if(err) {
 			  return res.status(200).send(err)
 		  } else {
@@ -504,7 +506,7 @@ function dataInsert(req,res)
 function dataUpdate(req,res)
 {
 
-  connection.query("SELECT ReviewID,User FROM Review",(err,rows)=>{
+  connection.query("SELECT ReviewID,UserFirstName,UserLastName FROM Review",(err,rows)=>{
 
 	  if(err) {
 		  return res.status(200).send(err)
@@ -513,11 +515,15 @@ function dataUpdate(req,res)
 
 		  Object.keys(rows).forEach(function(key) {
 				  var row = rows[key];
-				  var userName=row.User.toLowerCase();
-				  var userName_new=req.body["user"].toLowerCase();
-				  if(row.ReviewID===req.body["isbn"] && userName===userName_new)
+				  var first=row.UserFirstName.toLowerCase();
+				  var first_req=req.body["first"].toLowerCase();
+
+				  var last=row.UserLastName.toLowerCase();
+				  var last_req=req.body["last"].toLowerCase();
+
+				  if((row.ReviewID===req.body["isbn"]) && (first===first_req) && (last===last_req))
 				  {
-					  connection.query("UPDATE Review SET StarCounter=?,Comments=? WHERE ReviewID=? and User=?",[req.body["starcount"],req.body["comments"],req.body["isbn"],req.body["user"]]); 
+					  connection.query("UPDATE Review SET StarCounter=?,Comments=? WHERE ReviewID=? and UserFirstName=? and UserLastName=?",[req.body["starcount"],req.body["comments"],req.body["isbn"],req.body["first"],req.body["last"]]); 
 					  flag_1=true;
 					  return;
 				  }	
@@ -550,12 +556,20 @@ app.post("/review/get", (req, res) => {
 		  return res.send(err)
 	  } 
 	  else {
+		    
 			const reviewData = rows.map((row) => {
-				if(row.ReviewID===req.body["isbn"] )
+				var first=row.UserFirstName.toLowerCase();
+				var first_req=req.body["first"].toLowerCase();
+
+				var last=row.UserLastName.toLowerCase();
+				var last_req=req.body["last"].toLowerCase();
+
+				if((row.ReviewID===req.body["isbn"]) && (first===first_req) && (last===last_req))
 				{
 					return {
 							isbn:  row.ReviewID,
-							user: row.User,
+							first: row.UserFirstName,
+							last: row.UserLastName,
 							star: row.StarCounter,
 							comment: row.Comments					
 						};

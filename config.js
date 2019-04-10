@@ -6,8 +6,8 @@ config.db = {};
 config.db.port = '3306'; //This normally defaults to 3306 unless you changed it while installing mysql
 config.db.host = 'localhost'; //Likely localhost
 config.db.user = 'root'; //Whatever you set it to, depends on how you installed it
-config.db.password = '123456789'; //Also whatever you set it to
-config.db.database = 'book_store'; //Whatever you want to name the database
+config.db.password = ''; //Also whatever you set it to
+config.db.database = 'Bookstore'; //Whatever you want to name the database
 
 config.session = {};
 config.session.secret = "keyboard cat"; //This should be a sufficiently unique key to handle sessions

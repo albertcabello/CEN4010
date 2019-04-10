@@ -63,7 +63,7 @@ let tables = {
 	Description: "CREATE TABLE IF NOT EXISTS `Description` (`descriptionID` BIGINT PRIMARY KEY, `Description` TEXT)",
 
 	review: "CREATE TABLE IF NOT EXISTS `Review` (" +
-		 "`ReviewID` varchar(20) NOT NULL, User varchar(20) NOT NULL,"+
+		 "`ReviewID` varchar(20) NOT NULL, UserFirstName varchar(20) NOT NULL, UserLastName varchar(20) NOT NULL,"+
 		 "`StarCounter` int(1) NOT NULL, Comments varchar(1000))",
 	
 
