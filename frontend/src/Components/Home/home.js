@@ -3,7 +3,7 @@ import {BrowserRouter, Route, Link} from "react-router-dom";
 import Header from "../Header/header.js";
 import styles from './home.module.css';
 import Slider from "react-slick";
-const API = 'http://localhost:3001/';
+const API = 'http://localhost:3001/genre/';
 
 export default class Home extends React.Component {
 	state = {
