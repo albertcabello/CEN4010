@@ -115,7 +115,7 @@ app.get('/author/:authorFirst/:authorLast', (req, res) => {
 	});
 });
 
-app.get('/:genre', (req, res) => {
+app.get('/genre/:genre', (req, res) => {
 	const genre = req.params.genre;
 	console.log("Fetching genre info: " + genre);
 	const queryString = "SELECT * FROM Book WHERE genre = ?";
