@@ -1,8 +1,13 @@
 .banner{
     margin-left: 50px;
     margin-top: 10px;
-    width: 1190px; 
+    max-width: 1200px !important;
     height: 350px;
+}
+
+.center {
+    width: 50%;
+    margin: 0 auto;
 }
 
 .carousel-item{

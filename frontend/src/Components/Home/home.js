@@ -64,20 +64,22 @@ export default class Home extends React.Component {
 				
 				<Header /> 
 				
-				<img className= {styles['banner']} src= "http://oi64.tinypic.com/a4cg2.jpg"/>
-				<div className= {styles['carousel']}>
-					<div className= {styles['book-name']}>Classic Books</div>
-					<div className= {styles['underline']}></div>
-					<Slider {...settings}>
-				  	{classics.map(e => <div>{e}</div>)}
-      		</Slider>
-				</div>
-				<div className= {styles['carousel-right']}>
-				<div className= {styles['book-name']}>Young Adult Books</div>
-				<div className= {styles['underline']}></div>
-		  		<Slider {...settings}>
-				  {youngAdultBooks.map(e => <div>{e}</div>)}
-      		</Slider>
+				<div className={styles['center']}>
+					<img className= {styles['banner']} src= "http://oi64.tinypic.com/a4cg2.jpg"/>
+					<div className= {styles['carousel']}>
+						<div className= {styles['book-name']}>Classic Books</div>
+						<div className= {styles['underline']}></div>
+						<Slider {...settings}>
+							{classics.map(e => <div>{e}</div>)}
+						</Slider>
+					</div>
+					<div className= {styles['carousel']} styles={{float: 'right'}}>
+						<div className= {styles['book-name']}>Young Adult Books</div>
+						<div className= {styles['underline']}></div>
+						<Slider {...settings}>
+							  {youngAdultBooks.map(e => <div>{e}</div>)}
+						</Slider>
+					</div>
 				</div>
 			</div>);
 	}
