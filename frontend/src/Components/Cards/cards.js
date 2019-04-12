@@ -137,7 +137,8 @@ export default class Cards extends React.Component {
 						<div className={styles['column']}>
 							<div className={styles['address']}>
 								<div className={styles['addressInformation']}>
-									<span style={{fontSize: '17px' ,fontWeight: 'bold' }}>{element.cardNumber}</span>
+									<span style={{fontSize: '17px' ,fontWeight: 'bold' }}>{element.cardNumber}</span><br/><br/>
+									Expiration Date: {element.expireMonth}/{element.expireYear}
 								</div>
 								<div className={styles['editing']}> 
 									<span> 
@@ -155,7 +156,8 @@ export default class Cards extends React.Component {
 						<div className={styles['column']}>
 							<div className={styles['address']}>
 								<div className={styles['addressInformation']}>
-									<span style={{fontSize: '17px' ,fontWeight: 'bold' }}>{element.cardNumber}</span>
+									<span style={{fontSize: '17px' ,fontWeight: 'bold' }}>{element.cardNumber}</span><br/><br/>
+									Expiration Date: {element.expireMonth}/{element.expireYear}
 								</div>
 								<div className={styles['editing']}> 
 									<span> 

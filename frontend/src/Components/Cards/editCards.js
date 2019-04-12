@@ -17,7 +17,9 @@ export default class EditCards extends React.Component {
 				this.state = {loggedIn: undefined,
 					      finished: false,
 					      card: {
-					        cardNumber: ''
+					        cardNumber: '',
+						expireMonth: '1',
+						expireYear: '2019'
 					      },
 					      editing: false
 					    };
@@ -32,6 +34,8 @@ export default class EditCards extends React.Component {
 					      finished: false,
 					      card: {
 					      	cardNumber: '',
+						expireMonth: '1',
+						expireYear: '2019'
 					      },
 					      editing: false
 					    };
@@ -68,13 +72,14 @@ export default class EditCards extends React.Component {
 	handleSubmit(event) {
 		let body = {
 			cardId: this.state.card.id,
-			cardNumber: this.state.card.cardNumber
+			cardNumber: this.state.card.cardNumber,
+			expireMonth: this.state.card.expireMonth,
+			expireYear: this.state.card.expireYear
 		}
+		console.log(body);
 		fetch('http://localhost:3001/card', {method: this.state.editing ? "PUT" : "POST" , credentials: "include", headers: {"Content-Type": "application/json"},  body: JSON.stringify(body)}).then((res) => {
-			console.log("HERE 2");
 			return res.json();
 		}).then((json) => {
-			console.log("HERE");
 			if (json.hasOwnProperty("error") && json.error === "Credit card number is not valid") {
 				alert("That is not a valid credit card number, please reinput it");
 				let tmpState = this.state;
@@ -82,7 +87,7 @@ export default class EditCards extends React.Component {
 				this.setState(tmpState);
 			}
 			else if (json.hasOwnProperty("error") && json.error !== "Credit card number is not valid") {
-				alert("Something is wrong with the server, please try again later");
+				alert("Something is wrong with the server, please try again later " + json.error);
 				let tmpState = this.state;
 				tmpState.finished = true;
 				this.setState(tmpState);
@@ -97,6 +102,17 @@ export default class EditCards extends React.Component {
 	}
 
 	render() {
+		let months =[];
+		let years = [];
+		for (let i = 1; i < 50; i++) {
+			if (i <= 12) {
+				months.push(i);
+				years.push(i + 2018);
+			}
+			else {
+				years.push(i + 2018);
+			}
+		}
 		if (this.state.finished) {
 			return (
 				<div>
@@ -116,6 +132,14 @@ export default class EditCards extends React.Component {
 							<form onSubmit={this.handleSubmit}>
 								<div className={styles['textLabel']}>Card Number</div>
 								<input className={styles['textbox']} type="text" name="cardNumber" value={this.state.card.cardNumber} onChange={this.handleInputChange} />
+								<div className={styles['textLabel']}>Expiration Month</div>
+								<select name="expireMonth" value={this.state.card.expireMonth} onChange={this.handleInputChange}> {
+									months.map((m) => <option value={m}>{m}</option>)
+								}</select>
+								<div className={styles['textLabel']}>Expiration Year</div>
+								<select name="expireYear" value={this.state.card.expireYear} onChange={this.handleInputChange}> {
+									years.map((y) => <option value={y}>{y}</option>)
+								}</select>
 								<input type="submit" className={styles['subBtn']} value="Save" />
 							</form>
 						</div>

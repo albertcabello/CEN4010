@@ -440,9 +440,10 @@ app.post('/card', isAuthenticated, (req, res) => {
 		res.status(400).send({error: "Credit card number is not valid"});
 		return;
 	}
-	let query = `INSERT INTO cards (userId, cardNumber) VALUES (${req.session.user.id}, ?)`;
-	connection.query(query, req.body.cardNumber, (err, results) => {
-		if (err) res.status(400).send({error: "Couldn't save the credit card"});
+	let query = `INSERT INTO cards (userId, cardNumber, expireMonth, expireYear) VALUES (${req.session.user.id}, ?, ?, ?)`;
+	console.log(query, req.body.expireMonth, req.body.expireYear);
+	connection.query(query, [req.body.cardNumber, req.body.expireMonth, req.body.expireYear], (err, results) => {
+		if (err) res.status(400).send({error: "Couldn't save the credit card " + err});
 		else res.status(200).send({success: "Added credit card"});
 	});
 });
@@ -462,8 +463,8 @@ app.delete('/card', isAuthenticated, (req, res) => {
 });
 
 app.put('/card', isAuthenticated, (req, res) => {
-	let query = `UPDATE cards SET cardNumber = ? WHERE userId = ? and id = ?`;
-	let params = [req.body.cardNumber, req.session.user.id, req.body.cardId];
+	let query = `UPDATE cards SET cardNumber = ?, expireMonth = ?, expireYear = ? WHERE userId = ? and id = ?`;
+	let params = [req.body.cardNumber, req.body.expireMonth, req.body.expireYear, req.session.user.id, req.body.cardId];
 	if (!checkCard(req.body.cardNumber)) {
 		res.status(400).send({error: "Credit card number is not valid"});
 	}
@@ -476,9 +477,6 @@ app.put('/card', isAuthenticated, (req, res) => {
 	}
 });
 
-app.listen(port, () => {
-	console.log('Server is up and listening on' , port)
-  }) //This is the port express will listen on
 
 
 /************************************
@@ -633,3 +631,7 @@ res.json(booksByAuthor);
 console.log(booksByAuthor);
 	});
 });
+
+app.listen(port, () => {
+	console.log('Server is up and listening on' , port)
+  }) //This is the port express will listen on
