@@ -1,8 +1,6 @@
 .banner{
-    margin-left: 50px;
-    margin-top: 10px;
-    max-width: 1200px !important;
-    height: 350px;
+	margin: 10px auto;
+	display: block;
 }
 
 .center {
