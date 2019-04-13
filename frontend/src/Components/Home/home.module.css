@@ -1,13 +1,17 @@
 .banner{
+    width: 1190px; 
     margin-left: 50px;
     margin-top: 10px;
-    max-width: 1190px; 
-    width: 100%;
+    display: block;
     height: 350px;
 }
 
+.center{
+    max-width: 2000px;
+    margin: auto;
+}
 .carousel-item{
-    max-width: 156px;
+    max-width: 1190px;
     height: 206.7px;
 }
 

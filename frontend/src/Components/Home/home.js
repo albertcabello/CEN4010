@@ -66,8 +66,6 @@ export default class Home extends React.Component {
 				
 				<div className={styles['center']}>
 					<img className= {styles['banner']} src= "http://oi64.tinypic.com/a4cg2.jpg"/>
-				</div>
-				<div className={styles['center']}>
 					<div className= {styles['carousel']}>
 						<div className= {styles['book-name']}>Classic Books</div>
 						<div className= {styles['underline']}></div>
