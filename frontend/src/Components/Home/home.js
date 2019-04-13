@@ -39,7 +39,7 @@ export default class Home extends React.Component {
 			slidesToShow: 3,
 			slidesToScroll: 1,
 			autoplay: true,
-			autoplaySpeed: 2000,
+			autoplaySpeed: 2600,
 			};
 			
 		  var youngAdultBooks = [];
